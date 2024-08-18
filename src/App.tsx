@@ -1,11 +1,14 @@
-import './css/App.css'
+import { Route, Routes } from 'react-router-dom'
+import { Btn } from './pages/BtnTest'
+import { DropDownTest } from './pages/DropDownTest'
 
 function App() {
 
   return (
-    <>
-      hi
-    </>
+      <Routes>
+        <Route path='/btn' element={<Btn></Btn>}></Route>
+        <Route path='/dropdown' element={<DropDownTest></DropDownTest>}></Route>
+      </Routes>
   )
 }
 
