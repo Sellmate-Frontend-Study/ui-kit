@@ -1,4 +1,6 @@
 import type { Preview } from "@storybook/react";
+import '../src/css/index.css';
+import 'tailwindcss/tailwind.css';
 
 const preview: Preview = {
   parameters: {
@@ -10,7 +12,7 @@ const preview: Preview = {
     },
   },
 
-  tags: ["autodocs", "autodocs"],
+  tags: ["autodocs"],
 
 };
 
