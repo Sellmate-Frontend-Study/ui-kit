@@ -1,56 +1,51 @@
 export interface ButtonProps {
- /**
-  * How large should the button be?
-  */
- size?: 'xs' | 'sm' | 'md' | 'lg';
- /**
-  * What background color to use
-  */
- color?: string;
- /**
-  * Did you use Button hover style?
-  */
- noHover?: boolean;
- /**
-  * Button contents
-  */
- label?: string;
- /**
-  * Optional click handler
-  */
- onClick?: () => void;
- /**
-  * Button ClassName
-  */
- className?: string;
- /**
-  * Button type
-  */
- type?: HTMLButtonElement['type'];
- /**
-  * Button Outline
-  */
- outline?: boolean;
- /**
-  * Button Icon
-  */
- icon?: string;
+  size?: "xs" | "sm" | "md" | "lg";
+  color?: string;
+  label?: string;
+  disabled?: boolean;
+  noHover?: boolean;
+  type?: HTMLButtonElement["type"];
+  outline?: boolean;
+  onClick?: () => void;
+  icon?: JSX.Element; 
+  className ?:string
 }
 
 export const Button = ({
- size = 'sm',
- color = 'Blue_B_Default',
- type = 'button',
- label,
- ...props
+  size = "sm",
+  color = "blue",
+  label = "button",
+  disabled = false,
+  noHover = false,
+  outline = false,
+  className = "",
+  icon,
+  onClick,
 }: ButtonProps) => {
- const btnColor = `bg-[]`
- return (
-  <button
-   className={['s-button font-Pretendard'].join(' ')}
-   {...props}
-  >
-   {label}
-  </button>
- );
+
+  const colorClasses: { [key: string]: string } = {
+    red: "bg-red-500 text-white border-red-500",
+    blue: "bg-blue-500 text-white border-blue-500",
+    green: "bg-green-500 text-white border-green-500",
+  };
+
+  const outlineClasses = outline ? `bg-transparent text-${color} border border-${color}-500` : colorClasses[color];
+  const sizeClasses = {
+    xs: "text-xs py-1 px-3 rounded-sm",
+    sm: "text-sm py-2 px-4 rounded",
+    md: "text-base py-3 px-6 rounded-md",
+    lg: "text-lg py-4 px-8 rounded-lg",
+  };
+  const disabledClasses = disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer";
+  const hoverClasses = noHover ? "" : "hover:bg-opacity-90";
+
+  return (
+    <button
+      className={`${outlineClasses} ${sizeClasses[size]} ${disabledClasses} ${hoverClasses} ${className}`}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {icon || label }
+    </button>
+  );
 };
