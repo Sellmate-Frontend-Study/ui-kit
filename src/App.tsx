@@ -1,34 +1,47 @@
 import './css/App.css';
-import SDropdown from './components/SDropdown';
+import { useState } from 'react';
+import SCheckbox from './components/SCheckbox';
 
+const App = () => {
+  const [data, setData] = useState([
+    { id: 1, label: 'Item 1', checked: false },
+    { id: 2, label: 'Item 2', checked: false },
+    { id: 3, label: 'Item 3', checked: false },
+  ]);
 
-function App() {
-  const [count, setCount] = useState(0)
+  const handleSelect = (id: number) => {
+    setData((prev) =>
+      prev.map((checkbox) =>
+        checkbox.id === id
+          ? { ...checkbox, checked: !checkbox.checked }
+          : { ...checkbox, checked: false }
+      )
+    );
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="p-8">
+      <h2 className="mt-8">Single</h2>
+      <SCheckbox
+        checked={data[0].checked}
+        label={data[0].label}
+        onClick={() => handleSelect(data[0].id)}
+      />
+
+      <h2 className="mt-8">disabled</h2>
+      <SCheckbox  disabled={true} label="Disabled Checkbox" />
+
+      <h2 className="mt-8">Multiple</h2>
+      {data.map((checkbox) => (
+        <SCheckbox
+          key={checkbox.id}
+          label={checkbox.label}
+          checked={checkbox.checked}
+          onClick={() => handleSelect(checkbox.id)}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default App;
