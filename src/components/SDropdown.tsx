@@ -1,7 +1,7 @@
 import { createPortal } from 'react-dom';
 import { useId, useState } from 'react';
 import colors from '../css/colors.ts';
-import DropdownIcon from '../assets/DropdownIcon.tsx';
+import { ArrowDown12 } from '../assets/ArrowDownIcon.tsx';
 import DropdownOptions, { type DropdownOptionProps } from './DropdownOptions.tsx';
 
 export interface DropdownProps {
@@ -117,7 +117,7 @@ const SDropdown = ({
 								: 'border-dropdownInner',
 					].join(' ')}
 				>
-					<DropdownIcon
+					<ArrowDown12
 						className={disabled ? 'text-Grey_Default' : outline ? `text-[${argColor}]` : 'text-white'}
 					/>
 				</span>
