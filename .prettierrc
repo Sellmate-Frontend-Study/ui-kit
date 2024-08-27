@@ -9,7 +9,7 @@
 	"bracketSpacing": true,
 	"experimentalTernaries": false,
 	"jsxSingleQuote": true,
-	"printWidth": 100,
+	"printWidth": 80,
 	"proseWrap": "preserve",
 	"quoteProps": "as-needed",
 	"singleAttributePerLine": true,
@@ -17,5 +17,11 @@
 	"tabWidth": 1,
 	"semi": true,
 	"trailingComma": "es5",
-	"embeddedLanguageFormatting": "auto"
+	"embeddedLanguageFormatting": "auto",
+	"plugins": ["prettier-plugin-tailwindcss"],
+	"tailwindConfig": "./tailwind.config.ts",
+	"tailwindAttributes": ["className"],
+	"tailwindFunctions": ["clsx", "tw"],
+	"tailwindPreserveWhitespace": true,
+	"tailwindPreserveDuplicates": true
 }
