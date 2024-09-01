@@ -20,6 +20,8 @@ const config: Config = {
 		`border-[${color}]`,
 		`border-${key}/30`,
 		`decoration-[${color}]`,
+		`hover:border-[${color}]`,
+		`group-hover:border-[${color}]`,
 		`hover:before:bg-[${color}]`,
 		`hover:before:bg-${key}/10`,
 		`hover:before:border-[${color}]`,
