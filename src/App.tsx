@@ -1,34 +1,40 @@
-import { useState } from 'react';
-import SRadio from './components/SRadio';
-import STabs from './components/STab';
+// import { useState } from 'react';
+// import SRadio from './components/SRadio';
+// import STabs from './components/STab';
 
 const App = () => {
-  const [singleChecked, setSingleChecked] = useState(false);
-  const [singleDisableChecked, setSingleDisableChecked] = useState(false);
-  const [groupChecked, setGroupChecked] = useState('어제');
+  // const [singleChecked, setSingleChecked] = useState(false);
+  // const [singleDisableChecked, setSingleDisableChecked] = useState(false);
+  // const [groupChecked, setGroupChecked] = useState('어제');
 
-  const handleSingleClick = () => {
-    setSingleChecked(!singleChecked);
-  };
+  // const handleSingleClick = () => {
+  //   setSingleChecked(!singleChecked);
+  // };
 
-  const handleSingleDisableClick = () => {
-    setSingleDisableChecked(!singleDisableChecked);
-  };
+  // const handleSingleDisableClick = () => {
+  //   setSingleDisableChecked(!singleDisableChecked);
+  // };
 
-  const handleGroupClick = (value: string) => {
-    setGroupChecked(value);
-  };
+  // const handleGroupClick = (value: string) => {
+  //   setGroupChecked(value);
+  // };
 
-  const tabs = [
-    { name: 'tab1', label: 'tab1', badge: '대기 1', content: <div>tab1</div> },
-    { name: 'tab2', label: 'tab2', badge: '대기 2', content: <div>tab2</div> },
-    { name: 'tab3', label: 'tab3', content: <div>tab3</div> },
-    { name: 'tab4', label: 'tab4', content: <div>tab4</div> },
-  ];
+  // const tabs = [
+  //   { name: 'tab1', label: 'tab1', badge: '대기 1', content: <div>tab1</div> },
+  //   { name: 'tab2', label: 'tab2', badge: '대기 2', content: <div>tab2</div> },
+  //   { name: 'tab3', label: 'tab3', content: <div>tab3</div> },
+  //   { name: 'tab4', label: 'tab4', content: <div>tab4</div> },
+  // ];
 
   return (
     <>
-      <div className="p-8">
+
+
+
+
+
+
+      {/* <div className="p-8">
         <SRadio
           label="single"
           value="single"
@@ -72,7 +78,7 @@ const App = () => {
       </div>
       <div className='p-8'>
         <STabs tabs={tabs} />
-      </div>
+      </div> */}
     </>
   );
 };
