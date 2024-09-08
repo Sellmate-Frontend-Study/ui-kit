@@ -1,4 +1,5 @@
 import { useState } from "react";
+import STabContent from "./STabContent";
 
 interface STabProps {
   name: string;
@@ -8,41 +9,31 @@ interface STabProps {
   onClick: () => void;
 }
 
-interface TabPanelProps {
-  name: string;
-  content: React.ReactNode; 
-}
-
 interface STapsProps {
   tabs: {
     name: string;
     label: string;
     badge?: string;
-    content: React.ReactNode;
   }[];
 }
 
 const STab = ({ label, badge, selected = false, onClick }: STabProps) => {
-  return (
-    <div
-      onClick={onClick}
-      className={`px-10 py-4 cursor-pointer border border-b-0 rounded-t-md 
-        ${selected ? 'bg-white text-positive border-positive font-bold hover:bg-Blue_B_Lighten-6' : 'bg-Grey_Lighten-5 text-Grey_Default border-Grey_Lighten-2 hover:bg-Grey_Lighten-4'}`}
-    >
-      <span>{label}</span>
-      {badge && (
-        <span className={`ml-2 text-white text-xs px-2 py-1 rounded ${selected ? 'bg-Blue_C_Default' : 'bg-Blue_C_Lighten-1'}`}>
-          {badge}
-        </span>
-      )}
-    </div>
-  );
-};
+  const tabClasses = [
+    "px-10 py-4 cursor-pointer border border-b-0 rounded-t-md",
+    selected
+      ? "bg-white text-positive border-positive font-bold hover:bg-Blue_B_Lighten-6"
+      : "bg-Grey_Lighten-5 text-Grey_Default border-Grey_Lighten-2 hover:bg-Grey_Lighten-4"
+  ].join(" ");
 
-const STabPanel = ({ content }: TabPanelProps) => { 
+  const badgeClasses = [
+    "ml-2 text-white text-xs px-2 py-1 rounded",
+    selected ? "bg-Blue_C_Default" : "bg-Blue_C_Lighten-1"
+  ].join(" ");
+
   return (
-    <div className="p-4">
-      {content} 
+    <div onClick={onClick} className={tabClasses}>
+      <span>{label}</span>
+      {badge && <span className={badgeClasses}>{badge}</span>}
     </div>
   );
 };
@@ -69,11 +60,7 @@ const STabs = ({ tabs }: STapsProps) => {
         ))}
       </div>
       <div className="border-t border-positive">
-        {tabs.map((tab) =>
-            selectedTab === tab.name && (
-              <STabPanel key={tab.name} name={tab.name} content={tab.content} /> 
-            )
-        )}
+        <STabContent name={selectedTab} />
       </div>
     </div>
   );
