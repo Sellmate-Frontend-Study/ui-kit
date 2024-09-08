@@ -2,7 +2,7 @@ interface RadioCircleProps {
   color: string;
 }
 
-const RadioCircle= ({color}:RadioCircleProps ) => {
+const RadioIcon8= ({color}:RadioCircleProps ) => {
   return (
     <svg
       width="8"
@@ -16,4 +16,4 @@ const RadioCircle= ({color}:RadioCircleProps ) => {
   );
 };
 
-export default RadioCircle;
+export default RadioIcon8;
