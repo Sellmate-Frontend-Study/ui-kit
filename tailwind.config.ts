@@ -41,6 +41,8 @@ const config: Config = {
 			fontSize: sizes,
 			lineHeight: sizes,
 			borderRadius: sizes,
+			minWidth: sizes,
+			maxWidth: sizes, 
 			borderColor: {
 				dropdownInner: 'color-mix(in srgb, white 30%, transparent)',
 			},
