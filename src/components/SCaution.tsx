@@ -1,12 +1,12 @@
 import { CautionIcon12 } from "../assets/CautionIcon";
 
-interface SCautionProps {
+export interface SCautionProps {
   noIcon?: boolean;
   useModal?: boolean;
   useNotice?: boolean;
   liStyle?: string;
   label?: string;
-  contents?: string[];
+  contents: string[];
 }
 
 const SCaution = ({
