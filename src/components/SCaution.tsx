@@ -41,7 +41,7 @@ const SCaution = ({
         <ul className="list-none space-y-2">
           {contents.map((content, i) => (
             <li key={i}>
-              <span className="mr-3">{liStyle}</span>
+              <span className="mr-2">{liStyle}</span>
               {content}
             </li>
           ))}

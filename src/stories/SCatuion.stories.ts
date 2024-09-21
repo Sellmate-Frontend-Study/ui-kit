@@ -36,3 +36,39 @@ export const DefaultCaution: Story = {
     contents: list, 
   },
 };
+
+export const liStyleCaution: Story = {
+  args: {
+    label: '주의사항',
+    contents: list,
+    liStyle: '•' 
+  },
+};
+
+
+export const NoIconCaution: Story = {
+  args: {
+    label : '주의사항',
+    contents: list,
+    noIcon: true
+  }
+}
+
+export const UseModalCaution: Story = {
+  args: {
+    label : '주의사항',
+    contents: list,
+    noIcon: true,
+    useModal: true
+  }
+}
+
+export const UseNoticeCaution: Story = {
+  args: {
+    label : '주의사항',
+    contents: list,
+    noIcon: true,
+    useModal: true,
+    useNotice: true
+  }
+}
