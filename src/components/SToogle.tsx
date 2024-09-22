@@ -32,7 +32,7 @@ const SToggle = ({
     }
   };
 
-  const DefaultToggle = `relative inline-flex items-center justify-center w-36pxr h-20pxr rounded-10pxr transition-colors duration-300`;
+  const DefaultToggle = `relative inline-flex items-center justify-center w-36pxr h-20pxr rounded-10pxr transition-colors duration-300 overflow-hidden`;
   const disabledStyle = disabled ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer';
   const switchItemStyle = `absolute flex items-center justify-center left-0 m-2pxr w-16pxr h-16pxr bg-white rounded-full transition-transform duration-300 transform ${isToggled && 'translate-x-full'}`;
 
