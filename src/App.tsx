@@ -324,9 +324,42 @@ function App() {
 					</div>
     <STag label='tag' color="grey" />
 				</div>
-    <div className='inline-flex items-center gap-8pxr'>
-     <SToggle value={toggle} onChange={setToggle} />
-    </div>
+				<div className='flex flex-col gap-12pxr p-16pxr'>
+					<div>
+						<b>Toggle</b>
+					</div>
+
+					<div className='inline-flex items-center gap-8pxr'>
+						<b>Switch type: </b>
+						<SToggle
+							type='switch'
+							value={toggle}
+							onChange={setToggle}
+						/>
+						<SToggle
+							type='switch'
+							value={toggle}
+							onChange={setToggle}
+							disabled
+						/>
+					</div>
+					<div className='inline-flex items-center gap-8pxr'>
+						<b>Button type: </b>
+						<SToggle
+							type='button'
+							value={toggle}
+							label='toggle'
+							onChange={setToggle}
+						/>
+						<SToggle
+							type='button'
+							value={toggle}
+							onChange={setToggle}
+							label='toggle'
+							disabled
+						/>
+					</div>
+				</div>
 			</main>
 		</>
 	);
