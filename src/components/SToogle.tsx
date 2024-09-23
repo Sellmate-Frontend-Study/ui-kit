@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 
 export interface SToggleProps {
+  initToggle?: boolean;
+  onChange?: (updatedToggled: boolean) => void; 
+  type?: 'switch' | 'button';
   disabled?: boolean;
   className?: string;
-  initToggle?: boolean;
-  type?: 'switch' | 'button';
   onLabel?: string;  
   offLabel?: string; 
   label?: string;  
@@ -17,7 +18,8 @@ const SToggle = ({
   type = 'switch',
   onLabel = 'on',
   offLabel = 'off',
-  label = '',  
+  label = '',
+  onChange, 
 }: SToggleProps) => {
 
   const [isToggled, setIsToggled] = useState(initToggle);
@@ -28,7 +30,11 @@ const SToggle = ({
 
   const handleToggle = () => {
     if (!disabled) {
-      setIsToggled(!isToggled); 
+      const updatedToggled = !isToggled;
+      setIsToggled(updatedToggled);
+      if (onChange) {
+        onChange(updatedToggled); 
+      }
     }
   };
 
