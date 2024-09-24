@@ -56,7 +56,7 @@ const SToggle = ({
 
   if (type === 'switch') {
     return (
-      <div className={`flex items-center ${className}`}>
+      <div className={['flex items-center', className].join(' ')}>
         {label && <span className="mr-2">{label}</span>}
         <div
           className={[DefaultToggle, disabledStyle, toggleColor].join(' ')}
