@@ -9,6 +9,7 @@ import STabPanel from './components/STabPanel';
 import SChip from './components/SChip';
 import STag from './components/STag';
 import { Setting24 } from './assets/SettingIcon';
+import STooltip from './components/STooltip';
 
 function App() {
 	const [checked, setChecked] = useState<boolean>(false);
@@ -366,6 +367,57 @@ function App() {
 							color='indigo'
 							size='sm'
 							textClass='font-bold'
+						/>
+					</div>
+				</div>
+
+				<div className='mb-30 flex flex-col gap-12pxr p-16pxr'>
+					<div>
+						<b>Tooltip</b>
+					</div>
+
+					<div className='flex h-[60px] w-full gap-[200px]'>
+						<STooltip
+							type='top'
+							text='text'
+						/>
+						<STooltip
+							type='right'
+							text='text'
+						/>
+						<STooltip
+							type='bottom'
+							text='text'
+						/>
+						<STooltip
+							type='left'
+							text='text'
+						/>
+					</div>
+
+					<div className='mb-24pxr flex h-[60px] w-full gap-[200px]'>
+						<STooltip
+							type='top'
+							text='text
+							text
+							text
+							text'
+							close
+						/>
+						<STooltip
+							type='right'
+							text='text'
+							close
+						/>
+						<STooltip
+							type='bottom'
+							text='text'
+							close
+						/>
+						<STooltip
+							type='left'
+							text='text'
+							close
 						/>
 					</div>
 				</div>
