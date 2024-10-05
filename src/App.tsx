@@ -61,6 +61,8 @@ function App() {
     		  <STooltip 
 						position='top' 
 						trigger={<Question24/>} 
+						useClose
+						// trigger={<button>클릭!</button>}
 					>
 						<div className="text-center">이것은 아래쪽 툴팁입니다.</div>
 						<div className="text-center">마우스를 대면 나타납니다.</div>

@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Arrow16 } from '../assets/ArrowIcon';
+import {Close12} from '../assets/CloseIcon'
 
 interface STooltipProps {
   position?: 'top' | 'bottom' | 'left' | 'right';
   trigger?: React.ReactNode;
   children: React.ReactNode;
+  useClose?: boolean;
 }
 
-const STooltip = ({ position = 'top', children, trigger }: STooltipProps) => {
+const STooltip = ({ position = 'top', children, trigger, useClose }: STooltipProps) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const tooltipPosition = {
@@ -37,10 +39,18 @@ const STooltip = ({ position = 'top', children, trigger }: STooltipProps) => {
       {( 
         isVisible &&
         <div className={[tooltipContentClasses].join(' ')}>
+          {useClose && (
+            <Close12
+              className="absolute top-2 right-2 cursor-pointer"
+              onClick={() => setIsVisible(false)}
+            />
+          )}
           <div className={`absolute ${arrowPositionClasses[position]}`}>
-            <Arrow16 className='w-16pxr h-12pxr text-Blue_B_Darken-2'/>
+            <Arrow16 className="w-16pxr h-12pxr text-Blue_B_Darken-2" />
           </div>
-          {children}
+          <div className={`${useClose && 'pr-12pxr'}`}>
+            {children}
+          </div>
         </div>
       )}
     </div>
