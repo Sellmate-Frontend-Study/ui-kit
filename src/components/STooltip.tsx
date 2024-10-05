@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Arrow16 } from '../assets/ArrowIcon';
 import {Close12} from '../assets/CloseIcon'
 
-interface STooltipProps {
+export interface STooltipProps {
   position?: 'top' | 'bottom' | 'left' | 'right';
   trigger?: React.ReactNode;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   useClose?: boolean;
 }
 
@@ -20,7 +20,7 @@ const STooltip = ({ position = 'top', children, trigger, useClose }: STooltipPro
   };
 
   const tooltipContentClasses = 
-    `absolute ${tooltipPosition[position]} w-max px-20pxr py-8pxr text-sm text-white bg-Blue_B_Darken-2 text-xs rounded-md transition-opacity duration-300`;
+    `absolute ${tooltipPosition[position]} w-max px-20pxr py-8pxr text-sm text-white bg-Blue_B_Darken-2 text-sm rounded-md transition-opacity duration-300`;
 
   const arrowPositionClasses = {
     'top': 'bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full',
