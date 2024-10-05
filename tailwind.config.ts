@@ -49,6 +49,7 @@ const config: Config = {
 			},
 			colors: colors,
 			spacing: sizes,
+			padding: sizes
 		},
 	},
 	plugins: [],

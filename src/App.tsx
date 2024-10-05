@@ -11,6 +11,9 @@ import SChip from './components/SChip';
 import STag from './components/STag';
 import SToggle from './components/SToggle';
 import SCaution from './components/SCaution';
+import STooltip from './components/STooltip';
+import { Question24 } from './assets/QuestionIcon'
+import { Arrow16 } from './assets/ArrowIcon';
 
 function App() {
 	const [checked, setChecked] = useState(false);
@@ -53,6 +56,18 @@ function App() {
 		<>
 			<main>
 				<div className='flex flex-col gap-12pxr p-16pxr'>
+
+				<div className="flex justify-center items-center min-h-screen">
+    		  <STooltip 
+						position='top' 
+						trigger={<Question24/>} 
+					>
+						<div className="text-center">이것은 아래쪽 툴팁입니다.</div>
+						<div className="text-center">마우스를 대면 나타납니다.</div>
+    		  </STooltip>
+    		</div>
+
+
 					<div>
 						<b>Tabs</b>
 					</div>
