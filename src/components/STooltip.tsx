@@ -5,7 +5,7 @@ import STooltip from './STooltipContainer.tsx';
 export interface STooltipContainerProps {
 	type: 'top' | 'left' | 'bottom' | 'right';
 	text: string;
-	targetComponent?: JSX.Element;
+	targetComponent?: React.ReactNode;
 	zIndex?: number;
 	close?: boolean;
 }
