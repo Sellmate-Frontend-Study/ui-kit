@@ -376,14 +376,21 @@ function App() {
 						<b>Tooltip</b>
 					</div>
 
-					<div className='flex h-[60px] w-full gap-[200px]'>
+					<div className='flex h-[60px] w-full items-center gap-[200px]'>
 						<STooltip
 							type='top'
 							text='text'
+							targetComponent={<SButton label='test button' />}
 						/>
 						<STooltip
 							type='right'
 							text='text'
+							targetComponent={
+								<STag
+									label='grey'
+									color='grey'
+								/>
+							}
 						/>
 						<STooltip
 							type='bottom'
@@ -395,28 +402,42 @@ function App() {
 						/>
 					</div>
 
-					<div className='mb-24pxr flex h-[60px] w-full gap-[200px]'>
+					<div className='mb-24pxr flex h-[60px] w-full items-center gap-[200px]'>
 						<STooltip
 							type='top'
 							text='text
 							text
 							text
-							text'
+							textskjdfahkdjsflkdjklel
+							dslakfjalsdkjflkjdigjiaejglkfdajs
+							lkasdfjlkasdjf
+							klsdjflkasjdflasdflkasdflja
+							sdflksjdflkaj
+							sdflasd'
+							targetComponent={<SButton label='test button' />}
 							close
 						/>
 						<STooltip
 							type='right'
-							text='text'
+							text='text123123123'
+							targetComponent={
+								<STag
+									label='grey'
+									color='grey'
+								/>
+							}
 							close
 						/>
 						<STooltip
 							type='bottom'
-							text='text'
+							text='text124214124124'
 							close
 						/>
 						<STooltip
 							type='left'
-							text='text'
+							text='text12312312312adlkjfalksdfjlaksjflkjaslkdfjlkasdjflkjaskdflaksjdfl
+							asdfkjlasdfjlasdfasjdflasdfk
+							lskadjflasjdflk'
 							close
 						/>
 					</div>
