@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import STooltip from '../components/STooltip';
 import SButton from '../components/SButton';
 import React from 'react';
+import STag from '../components/STag';
 
 const meta = {
 	title: 'STooltip',
@@ -13,7 +14,17 @@ const meta = {
 	argTypes: {
 		type: { control: 'select', options: ['top', 'bottom', 'left', 'right'] },
 		text: { control: 'text' },
-		targetComponent: { control: 'object' },
+		targetComponent: {
+			control: 'select',
+			options: [
+				'test text',
+				React.createElement(STag, {
+					label: 'xs tag',
+					color: 'blue',
+				}),
+				'',
+			],
+		},
 		close: { control: 'boolean' },
 	},
 } satisfies Meta<typeof STooltip>;
