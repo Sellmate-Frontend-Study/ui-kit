@@ -10,6 +10,7 @@ import SChip from './components/SChip';
 import STag from './components/STag';
 import { Setting24 } from './assets/SettingIcon';
 import STooltip from './components/STooltip';
+import SPopover from './components/SPopover';
 
 function App() {
 	const [checked, setChecked] = useState<boolean>(false);
@@ -438,6 +439,101 @@ function App() {
 							text='text12312312312adlkjfalksdfjlaksjflkjaslkdfjlkasdjflkjaskdflaksjdfl
 							asdfkjlasdfjlasdfasjdflasdfk
 							lskadjflasjdflk'
+							close
+						/>
+					</div>
+				</div>
+				<div className='mb-30 flex flex-col gap-12pxr p-16pxr'>
+					<div>
+						<b>popover</b>
+					</div>
+
+					<div className='flex h-[120px] w-full items-center gap-[200px]'>
+						<SPopover
+							type='top'
+							title='title'
+							text={
+								<>
+									<div>textext</div>
+									<div>textextetxttextxetxetxte</div>
+									<div>textext</div>
+								</>
+							}
+							mainButton={{
+								buttonText: 'main button',
+								buttonFn: () => {},
+								buttonType: 'default',
+							}}
+							targetComponent={<SButton label='test button' />}
+						/>
+						<SPopover
+							type='right'
+							title='title'
+							text={
+								<>
+									<div>textext</div>
+									<div>textextetxttextxetxetxte</div>
+									<div>textext</div>
+								</>
+							}
+							mainButton={{
+								buttonText: 'main button',
+								buttonFn: () => {},
+								buttonType: 'text',
+							}}
+							targetComponent={
+								<STag
+									label='grey'
+									color='grey'
+								/>
+							}
+							secondaryButton={{
+								buttonText: 'sub button11111',
+								buttonFn: () => {},
+								buttonType: 'default',
+							}}
+						/>
+						<SPopover
+							type='bottom'
+							text={
+								<>
+									<div>textext</div>
+									<div>textextetxttextxetxetxte</div>
+									<div>textext</div>
+								</>
+							}
+							mainButton={{
+								buttonText: 'main button',
+								buttonFn: () => {},
+								buttonType: 'default',
+							}}
+							targetComponent={
+								<STag
+									label='grey'
+									color='grey'
+								/>
+							}
+						/>
+						<SPopover
+							type='left'
+							text={
+								<>
+									<div>textext</div>
+									<div>textextetxttextxetxetxte</div>
+									<div>textext</div>
+								</>
+							}
+							mainButton={{
+								buttonText: 'main button',
+								buttonFn: () => {},
+								buttonType: 'default',
+							}}
+							targetComponent={
+								<STag
+									label='grey'
+									color='grey'
+								/>
+							}
 							close
 						/>
 					</div>

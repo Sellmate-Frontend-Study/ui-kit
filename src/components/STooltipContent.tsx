@@ -19,7 +19,7 @@ const initParentDOMRect: Position = {
 	top: 0,
 };
 
-interface STooltipProps {
+interface STooltipContentProps {
 	tooltipId: string;
 	type: 'top' | 'left' | 'bottom' | 'right';
 	text: string;
@@ -28,14 +28,14 @@ interface STooltipProps {
 	close?: boolean;
 }
 
-const STooltip = ({
+const STooltipContent = ({
 	tooltipId,
 	type,
 	text,
 	setIsHover,
 	zIndex,
 	close,
-}: STooltipProps) => {
+}: STooltipContentProps) => {
 	const [position, setPosition] = useState<Position>(initParentDOMRect);
 	const tooltipRef = useRef<HTMLDivElement>(null);
 
@@ -134,4 +134,4 @@ const STooltip = ({
 	);
 };
 
-export default STooltip;
+export default STooltipContent;

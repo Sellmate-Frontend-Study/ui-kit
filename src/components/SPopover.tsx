@@ -1,22 +1,34 @@
 import { useId, useState } from 'react';
 import { createPortal } from 'react-dom';
-import STooltipContent from './STooltipContent.tsx';
+import SPopoverContent from './SPopverContent.tsx';
 
-export interface STooltipProps {
+export interface ButtonData {
+	buttonText: string;
+	buttonFn: () => void;
+	buttonType: 'default' | 'text';
+}
+
+export interface SPopoverProps {
 	type: 'top' | 'left' | 'bottom' | 'right';
-	text: string;
+	text: string | React.ReactNode;
+	mainButton: ButtonData;
+	title?: string;
 	targetComponent?: React.ReactNode;
 	zIndex?: number;
+	secondaryButton?: ButtonData;
 	close?: boolean;
 }
 
-const STooltip = ({
+const SPopover = ({
 	type,
+	title,
 	text,
 	targetComponent,
+	mainButton,
 	zIndex = 10,
+	secondaryButton,
 	close,
-}: STooltipProps) => {
+}: SPopoverProps) => {
 	const [isHover, setIsHover] = useState(false);
 	const id = useId();
 
@@ -54,34 +66,19 @@ const STooltip = ({
 			id={`s-tooltip--${id}`}
 			className='relative flex items-center justify-center'
 			onMouseEnter={() => setIsHover(true)}
-			onMouseLeave={() => !close && setIsHover(false)}
 		>
 			{targetComponent ? targetComponent : <img src='/questionMarkIcon.png' />}
 
 			{isHover &&
 				createPortal(
-					// <div
-					// 	className={`${tooltipPosition} ${arrowPosition} ${!close && 'pointer-events-none'} ${zIndexClass} absolute flex items-center`}
-					// 	style={{ filter: 'drop-shadow(2px 2px 8px 2px #00000033)' }}
-					// >
-					// 	<TooltipArrow className={arrowStyle} />
-					// 	<div
-					// 		className={`relative flex-1 gap-12pxr rounded-4pxr bg-Blue_B_Darken-2 px-20pxr py-8pxr text-white ${close && 'pr-36pxr'}`}
-					// 	>
-					// 		<div className='font-medium leading-20pxr'>{text}</div>
-					// 		{close && (
-					// 			<Close12
-					// 				onClick={() => setIsHover(false)}
-					// 				className='absolute right-12pxr top-12pxr'
-					// 			/>
-					// 		)}
-					// 	</div>
-					// </div>,
-					<STooltipContent
+					<SPopoverContent
 						tooltipId={id}
 						type={type}
 						text={text}
 						setIsHover={setIsHover}
+						mainButton={mainButton}
+						title={title}
+						secondaryButton={secondaryButton}
 						zIndex={zIndex}
 						close={close}
 					/>,
@@ -91,4 +88,4 @@ const STooltip = ({
 	);
 };
 
-export default STooltip;
+export default SPopover;
