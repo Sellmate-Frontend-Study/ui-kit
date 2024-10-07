@@ -11,6 +11,9 @@ import SChip from './components/SChip';
 import STag from './components/STag';
 import SToggle from './components/SToggle';
 import SCaution from './components/SCaution';
+import STooltip from './components/STooltip';
+import { Question24 } from './assets/QuestionIcon'
+import { Arrow16 } from './assets/ArrowIcon';
 
 function App() {
 	const [checked, setChecked] = useState(false);
