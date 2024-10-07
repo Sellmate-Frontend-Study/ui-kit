@@ -8,17 +8,21 @@ interface STooltipProps {
   trigger: React.ReactNode;
   children: React.ReactNode;
   useClose?: boolean;
-  usePopover?: boolean; 
+  usePopover?: boolean;
 }
 
-const STooltip = ({ position = 'top', children, trigger, useClose=false, usePopover = false } : STooltipProps) => {
+const STooltip = ({
+  position = 'top',
+  children,
+  trigger,
+  useClose = false,
+  usePopover = false,
+}: STooltipProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
   const tooltipRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLDivElement | null>(null);
 
-
-  const actualUseClose = usePopover ? true : useClose;
   const updateTooltipPosition = useCallback(() => {
     if (triggerRef.current && tooltipRef.current) {
       const triggerRect = triggerRef.current.getBoundingClientRect();
@@ -46,15 +50,16 @@ const STooltip = ({ position = 'top', children, trigger, useClose=false, usePopo
 
       setTooltipPosition({ top, left });
     }
-  }, [position]); 
-  
+  }, [position]);
+
   useEffect(() => {
     if (isVisible) {
       updateTooltipPosition();
     }
   }, [isVisible, position, updateTooltipPosition]);
 
-  const tooltipClasses = 'absolute z-50 w-max px-20pxr py-8pxr text-sm text-white bg-Blue_B_Darken-2 rounded-md transition-opacity duration-300';
+  const tooltipClasses =
+    'absolute z-50 w-max px-20pxr py-8pxr text-sm text-white bg-Blue_B_Darken-2 rounded-md transition-opacity duration-300';
   const closeIconClasses = 'absolute top-2 right-2 cursor-pointer';
   const arrowIconClasses = 'w-16pxr h-12pxr text-Blue_B_Darken-2';
   const arrowPositionClasses = {
@@ -81,18 +86,18 @@ const STooltip = ({ position = 'top', children, trigger, useClose=false, usePopo
           <div
             ref={tooltipRef}
             style={{ top: tooltipPosition.top, left: tooltipPosition.left }}
-            className={[tooltipClasses].join(' ')}
+            className={tooltipClasses}
           >
-            {actualUseClose && (
+            {(usePopover || useClose) && (
               <Close12
-                className={[closeIconClasses].join(' ')}
+                className={closeIconClasses}
                 onClick={() => setIsVisible(false)}
               />
             )}
             <div className={['absolute', arrowPositionClasses[position]].join(' ')}>
-              <Arrow16 className={[arrowIconClasses].join(' ')} />
+              <Arrow16 className={arrowIconClasses} />
             </div>
-            <div className={`${actualUseClose ? 'pr-12pxr' : ''}`}>{children}</div>
+            <div className={`${usePopover || useClose ? 'pr-12pxr' : ''}`}>{children}</div>
           </div>,
           document.body
         )}

@@ -56,20 +56,6 @@ function App() {
 		<>
 			<main>
 				<div className='flex flex-col gap-12pxr p-16pxr'>
-
-				<div className="flex justify-center items-center min-h-screen">
-    		  <STooltip 
-						position='top' 
-						trigger={<Question24/>} 
-						useClose
-						// trigger={<button>클릭!</button>}
-					>
-						<div className="text-center">이것은 아래쪽 툴팁입니다.</div>
-						<div className="text-center">마우스를 대면 나타납니다.</div>
-    		  </STooltip>
-    		</div>
-
-
 					<div>
 						<b>Tabs</b>
 					</div>
