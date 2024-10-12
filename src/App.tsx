@@ -12,6 +12,7 @@ import STag from './components/STag';
 import STooltip from './components/STooltip';
 import SToggle from './components/SToggle';
 import SCaution from './components/SCaution';
+import SInput from './components/Sinput';
 
 function App() {
 	const [checked, setChecked] = useState(false);
@@ -51,10 +52,120 @@ function App() {
 	};
 
 	const [showTooltip, setShowTooltip] = useState<boolean>(false);
+	const [sInputValue, setSInputValue] = useState('');
 
 	return (
 		<>
 			<main>
+				<div className='flex flex-col gap-12pxr p-16pxr'>
+					<div>
+						<b>Inputs</b>
+					</div>
+					<div className='flex gap-8pxr'>
+						<b>Default Input</b>
+						<SInput
+							type='text'
+							state='active'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+						/>
+						<SInput
+							type='text'
+							state='active'
+							disabled
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+						/>
+						<SInput
+							type='text'
+							state='pass'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+						/>
+						<SInput
+							type='text'
+							state='error'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+						/>
+					</div>
+					<div className='flex gap-8pxr'>
+						<b>Label Input</b>
+						<SInput
+							type='text'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+						/>
+						<SInput
+							type='text'
+							disabled
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+						/>
+						<SInput
+							type='text'
+							state='pass'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+						/>
+						<SInput
+							type='text'
+							state='error'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+						/>
+					</div>
+					<div className='flex gap-8pxr'>
+						<b>addon Input</b>
+						<SInput
+							type='text'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+							labelType='addon'
+						/>
+						<SInput
+							type='text'
+							disabled
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+							labelType='addon'
+						/>
+						<SInput
+							type='text'
+							state='pass'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+							labelType='addon'
+						/>
+						<SInput
+							type='text'
+							state='error'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+							labelType='addon'
+						/>
+					</div>
+				</div>
 				<div className='flex flex-col gap-12pxr p-16pxr'>
 					<div className='h-100pxr'></div>
 					<div>
