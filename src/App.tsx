@@ -12,6 +12,7 @@ import STag from './components/STag';
 import STooltip from './components/STooltip';
 import SToggle from './components/SToggle';
 import SCaution from './components/SCaution';
+import SInput from './components/SInput';
 
 function App() {
 	const [checked, setChecked] = useState(false);
@@ -52,11 +53,21 @@ function App() {
 
 	const [showTooltip, setShowTooltip] = useState<boolean>(false);
 
+	const [value, setValue] = useState('')
+
 	return (
 		<>
 			<main>
 				<div className='flex flex-col gap-12pxr p-16pxr'>
 					<div className='h-100pxr'></div>
+					<div>
+						<b>Input</b>
+					</div>
+					<div className='flex flex-col items-center justify-center gap-8pxr'>
+						<SInput value={value} onChange={(e) => setValue(e.target.value)}/>
+						<SInput value={value} onChange={(e) => setValue(e.target.value)} label='라벨임' labelType='addon'/>
+						{value}
+					</div>
 					<div>
 						<b>Tooltip</b>
 					</div>
