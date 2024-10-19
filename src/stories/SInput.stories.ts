@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import SInput, { InputProps } from '../components/Sinput';
+import SInput, { InputProps } from '../components/SInput';
 
 // 스토리북 메타데이터
 
@@ -11,6 +11,7 @@ const meta = {
 	},
 	tags: ['autodocs'],
 	argTypes: {
+		type: { control: 'select', options: ['text', 'password'] },
 		textState: { control: 'text' },
 		state: { control: 'select', options: ['active', 'pass', 'error'] },
 		disabled: { control: 'boolean' },
@@ -26,6 +27,23 @@ type Story = StoryObj<InputProps>;
 export const DefaultInput: Story = {
 	args: {
 		textState: 'text value',
+	},
+};
+
+export const PasswordInput: Story = {
+	args: {
+		type: 'password',
+		textState: 'text value',
+	},
+};
+
+export const HintInput: Story = {
+	args: {
+		textState: 'text value',
+		inputClass: 'w-200pxr',
+		hintText:
+			'Lorem Ipsum has been the industry Lorem Ipsum has been the industry',
+		hintClass: 'w-200pxr',
 	},
 };
 

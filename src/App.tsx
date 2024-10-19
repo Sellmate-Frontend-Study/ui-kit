@@ -12,7 +12,7 @@ import STag from './components/STag';
 import STooltip from './components/STooltip';
 import SToggle from './components/SToggle';
 import SCaution from './components/SCaution';
-import SInput from './components/Sinput';
+import SInput from './components/SInput';
 
 function App() {
 	const [checked, setChecked] = useState(false);
@@ -163,6 +163,87 @@ function App() {
 							inputClass='w-152pxr'
 							label='label'
 							labelType='addon'
+						/>
+					</div>
+					<div className='flex gap-8pxr'>
+						<b>password Input</b>
+						<SInput
+							type='password'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+							labelType='addon'
+						/>
+						<SInput
+							type='password'
+							disabled
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+							labelType='addon'
+						/>
+						<SInput
+							type='password'
+							state='pass'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+							labelType='addon'
+						/>
+						<SInput
+							type='password'
+							state='error'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+							labelType='addon'
+						/>
+					</div>
+					<div className='flex gap-8pxr'>
+						<b>hint Input</b>
+						<SInput
+							type='text'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+							labelType='addon'
+							hintText='text hint lorem'
+							hintState='error'
+						/>
+						<SInput
+							type='text'
+							disabled
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+							labelType='addon'
+							hintText='text hint lorem'
+						/>
+						<SInput
+							type='text'
+							state='pass'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+							labelType='addon'
+							hintText='text hint lorem'
+						/>
+						<SInput
+							type='text'
+							state='error'
+							textState={sInputValue}
+							setTextState={setSInputValue}
+							inputClass='w-152pxr'
+							label='label'
+							labelType='addon'
+							hintText='text hint lorem'
 						/>
 					</div>
 				</div>
