@@ -12,13 +12,14 @@ import STag from './components/STag';
 import STooltip from './components/STooltip';
 import SToggle from './components/SToggle';
 import SCaution from './components/SCaution';
+import SInput from './components/SInput';
 
 function App() {
 	const [checked, setChecked] = useState(false);
 	const [toggle, setToggle] = useState(false);
 	const [selectedValue, setSelectedValue] = useState<string | number>('item3');
 	const [tabValue, setTabValue] = useState('tab1');
-	const [inputValue, setInputValue] = useState('aaa');
+	const [inputValue, setInputValue] = useState('');
 
 	const handleClick = () => {
 		setChecked(!checked);
@@ -308,6 +309,21 @@ function App() {
 								onChange={handleRadioChange}
 							/>
 						))}
+					</div>
+				</div>
+
+				<div className='flex flex-col gap-12pxr p-16pxr'>
+					<div>
+						<b>Input</b>
+					</div>
+					value : {selectedValue}
+					<div className='inline-flex items-center gap-8pxr'>
+      <SInput
+       value={inputValue}
+       className='mx-2 my-1'
+       setState={setInputValue}
+       rules={[(val) => !!val || 'This is Error']}
+      />
 					</div>
 				</div>
 
