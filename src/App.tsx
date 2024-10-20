@@ -65,7 +65,8 @@ function App() {
 					</div>
 					<div className='flex flex-col items-center justify-center gap-8pxr'>
 						<SInput value={value} onChange={(e) => setValue(e.target.value)}/>
-						<SInput value={value} onChange={(e) => setValue(e.target.value)} label='라벨임' labelType='addon'/>
+						<SInput password={true} value={value} onChange={(e) => setValue(e.target.value)}/>
+						<SInput password={true} value={value} onChange={(e) => setValue(e.target.value)} label='라벨임' labelType='addon'/>
 						{value}
 					</div>
 					<div>
