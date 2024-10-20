@@ -18,13 +18,13 @@ export const Default: Story = {};
 
 export const LabelInput: Story = {
   args:{
-    label : "sellmate"
+    label : "test"
   }
 };
 
 export const AddonLabelInput: Story = {
   args:{
-    label : "sellmate",
+    label : "test",
     labelType : "addon"
   }
 };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Visible16 } from '../assets/visibleIcon';
+import { Visible16 } from '../assets/VisibleIcon';
 import { InVisible16 } from '../assets/InVisibleIcon';
 
 export interface SInputProps {
@@ -13,6 +13,8 @@ export interface SInputProps {
   label?: string; 
   labelType?: 'default' | 'addon'; 
   password?: boolean;
+  rule?: RegExp; 
+  errorMsg?: string;
 }
 
 const SInput = ({
@@ -26,12 +28,24 @@ const SInput = ({
   label, 
   labelType = 'default', 
   password = false,
+  rule,
+  errorMsg
 }: SInputProps) => {
 
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [inputStatus, setInputStatus] = useState(status);
 
   const togglePassword = () => {
-    setPasswordVisible((prev) => !prev);
+    setPasswordVisible(!passwordVisible);
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e); 
+    const inputValue = e.target.value;
+
+    if (password && rule) {
+      const validation = rule.test(inputValue);
+      setInputStatus(validation ? 'pass' : 'error');
+    }
   };
 
   const statusClasses = {
@@ -55,7 +69,8 @@ const SInput = ({
   const inputIconClasses = `absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer`
 
   return (
-    <div className="flex items-center">
+    <div className='flex flex-col items-center'>
+      <div className="flex items-center">
       {label && (
         <div className={labelClasses}>
           {label}
@@ -65,11 +80,11 @@ const SInput = ({
       <input
         type={password && !passwordVisible ? 'password' : 'text'} 
         value={value} 
-        onChange={onChange} 
+        onChange={handleChange} 
         placeholder={placeholder} 
         disabled={disabled} 
         required={required} 
-        className={['s-input', inputClasses, disabledClasses, statusClasses[status], className].join(' ')}
+        className={['s-input', inputClasses, disabledClasses, statusClasses[inputStatus], className].join(' ')}
       />
       {password && (
           <div className={inputIconClasses} onClick={togglePassword}>
@@ -82,6 +97,15 @@ const SInput = ({
         )}
       </div>
     </div>
+    <div>
+    {inputStatus === 'error' && (
+      <div className="text-Red_Default text-12pxr mt-2 break-words">
+        {errorMsg}
+      </div>
+    )}
+    </div>
+    </div>
+    
   );
 };
 
