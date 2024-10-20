@@ -67,6 +67,7 @@ const SInput = ({
     : `flex items-center justify-center h-28pxr px-12pxr leading-20pxr border border-r-0 rounded-l-2pxr bg-Grey_Lighten-5 text-Grey_Darken-4 ${disabled ? 'border-Grey_Lighten-2' : 'border-Grey_Lighten-1'}`;
 
   const inputIconClasses = `absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer`
+  const errorMsgClasses = 'text-Red_Default text-12pxr mt-2 break-words'
 
   return (
     <div className='flex flex-col items-center'>
@@ -78,7 +79,7 @@ const SInput = ({
       )}
       <div className="relative">
       <input
-        type={password && !passwordVisible ? 'password' : 'text'} 
+        type={password && passwordVisible ? 'text' : 'password' } 
         value={value} 
         onChange={handleChange} 
         placeholder={placeholder} 
@@ -99,7 +100,7 @@ const SInput = ({
     </div>
     <div>
     {inputStatus === 'error' && (
-      <div className="text-Red_Default text-12pxr mt-2 break-words">
+      <div className={errorMsgClasses}>
         {errorMsg}
       </div>
     )}

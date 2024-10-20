@@ -28,3 +28,4 @@ export const AddonLabelInput: Story = {
     labelType : "addon"
   }
 };
+
