@@ -1,4 +1,13 @@
-import { ChangeEvent, useEffect, useId, useState } from 'react';
+import {
+	type ChangeEvent,
+	type Dispatch,
+	type SetStateAction,
+	useEffect,
+	useId,
+	useState,
+} from 'react';
+import { VisibilityOff16 } from '../assets/VisibilityOffIcon';
+import { VisibilityOn16 } from '../assets/VisibilityOnIcon';
 
 export interface InputProps {
 	value: string;
@@ -8,12 +17,13 @@ export interface InputProps {
 	description?: string;
 	placeholder?: string;
 	disabled?: boolean;
- name?: string;
- readOnly?: boolean;
-	onChange?: (arg: ChangeEvent<HTMLInputElement>['target']['value']) => void;
- type?: HTMLInputElement['type']
- className?: string;
- inputClassName?: string;
+	name?: string;
+	readOnly?: boolean;
+	setState?: Dispatch<SetStateAction<string>>;
+	type?: 'text' | 'password';
+	className?: string;
+	inputClassName?: string;
+ rules?: ((val: string) => boolean | string)[]
 }
 
 const SInput = ({
@@ -21,19 +31,22 @@ const SInput = ({
 	label,
 	insideLabel,
 	description,
-	onChange,
+	setState,
 	disabled,
- name,
- readOnly,
- type = 'text',
+	name,
+	readOnly,
+ rules,
+	type = 'text',
 	status = 'normal',
 	placeholder = '',
- className = '',
- inputClassName = '',
+	className = '',
+	inputClassName = '',
 }: InputProps) => {
- const id = useId()
+	const id = useId();
 	const [inputValue, setInputValue] = useState(value);
- const [inputStatus, setInputStatus] = useState(status)
+	const [inputStatus, setInputStatus] = useState(status);
+	const [inputType, setInputType] = useState(type);
+ const [hint, setHint] = useState(description || '')
 	const statusClass = {
 		error: 'shadow-0px_0px_4px_0px_[#E30000] border-Red_Default',
 		success: 'shadow-0px_0px_4px_0px_[#05D358] border-Green_Lighten-2',
@@ -41,57 +54,97 @@ const SInput = ({
 		normal: 'border-Grey_Lighten-1',
 	};
 
+ const hintStatusClass = {
+  error: 'text-Red_Default',
+		success: 'text-Green_Lighten-2',
+		focus: 'text-Blue_C_Default',
+		normal: 'text-Grey_Darken-5',
+ }
+
 	useEffect(() => {
 		setInputValue(value);
 	}, [value]);
 
- useEffect(() => {
+	useEffect(() => {
 		setInputStatus(status);
 	}, [status]);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		if (!onChange || disabled) return;
-		onChange(e.target.value);
+		if (!setState || disabled) return;
+  // if (rules === undefined) return;
+
+  // rules.forEach((rule) => {   
+  //  if (typeof rule === 'function') {
+  //   console.log(rule(e.target.value))
+  //   setInputStatus(rule(e.target.value) === false ? 'error' : inputStatus)
+  //  } else if (typeof rule === 'string') {
+  //   setHint(rule)
+  //  }
+  // })
+		setState(e.target.value);
 	};
 
- const handleFocus = () => {
-  setInputStatus('focus')
- }
+	const handleFocus = () => {
+		setInputStatus('focus');
+	};
+
+	const handleType = (val: 'off' | 'on') => {
+		setInputType(val === 'off' ? 'text' : 'password');
+	};
 
 	return (
-		<fieldset className={['s-input outline-none focus-visible:outline-none', className].join(' ')}>
+		<fieldset
+			className={[
+				's-input outline-none focus-visible:outline-none inline-flex flex-col',
+				className,
+			].join(' ')}
+		>
 			<div className='inline-flex items-center'>
 				{label && <span className='mr-12pxr text-Grey_Darken-4'>{label}</span>}
-				{insideLabel && <label
-					className={[
-						'inline-flex items-center h-28pxr text-Grey_Darken-4 rounded-bl-2pxr rounded-tl-2pxr border  border-r-0 px-12pxr',
-      disabled ? 'bg-Grey_Lighten-5 border-Grey_Lighten-2' : 'bg-Grey_Lighten-5 border-Grey_Lighten-1',
-					].join(' ')}
-				>
-					{insideLabel}
-				</label>}
-					<input
-      id={`s-input--${id}`}
-      name={name}
+				{insideLabel && (
+					<label
 						className={[
-							'outline-none focus-visible:outline-none',
-							'border px-12pxr py-4pxr text-Grey_Darken-4 h-28pxr placeholder:text-Grey_Lighten-1',
-							insideLabel ? 'rounded-br-2pxr rounded-tr-2pxr' : 'rounded-2pxr',
+							'inline-flex h-28pxr items-center rounded-bl-2pxr rounded-tl-2pxr border border-r-0  px-12pxr text-Grey_Darken-4',
 							disabled
-								? 'border-Grey_Lighten-2 bg-Grey_Lighten-4 text-Grey_Default'
-								: statusClass[inputStatus],
-        inputClassName,
+								? 'border-Grey_Lighten-2 bg-Grey_Lighten-5'
+								: 'border-Grey_Lighten-1 bg-Grey_Lighten-5',
 						].join(' ')}
-      type={type}
-						value={inputValue}
-      disabled={disabled}
-      readOnly={readOnly}
-						placeholder={placeholder}
-      onFocus={handleFocus}
-						onChange={handleChange}
-					/>
+					>
+						{insideLabel}
+					</label>
+				)}
+    <label className={[
+     'h-28pxr border py-4pxr inline-flex items-center',
+     type === 'password' ? 'pl-12pxr pr-8pxr' : 'px-12pxr',
+     insideLabel ? 'rounded-br-2pxr rounded-tr-2pxr' : 'rounded-2pxr',
+     disabled
+      ? 'border-Grey_Lighten-2 bg-Grey_Lighten-4 text-Grey_Default'
+      : statusClass[inputStatus],
+    ].join(' ')}>
+				<input
+					id={`s-input--${id}`}
+					name={name}
+					className={[
+						'outline-none focus-visible:outline-none !bg-transparent',
+						'text-Grey_Darken-4 placeholder:text-Grey_Lighten-1',
+						inputClassName,
+					].join(' ')}
+					type={inputType}
+					value={inputValue}
+					disabled={disabled}
+					readOnly={readOnly}
+					placeholder={placeholder}
+					onFocus={handleFocus}
+					onChange={handleChange}
+				/>
+				{type === 'password' && (inputType === 'text' ? (
+     <VisibilityOn16 onClick={() => handleType('on')} />
+				) : (
+					<VisibilityOff16 onClick={() => handleType('off')} />
+				))}
+    </label>
 			</div>
-			{description && <span className='mt-8pxr'>{description}</span>}
+			{hint && <span className={['mt-6pxr', hintStatusClass[status]].join(' ')}>{hint}</span>}
 		</fieldset>
 	);
 };
