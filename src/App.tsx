@@ -13,6 +13,7 @@ import STooltip from './components/STooltip';
 import SToggle from './components/SToggle';
 import SCaution from './components/SCaution';
 import SInput from './components/SInput';
+import STextArea from './components/STextArea';
 
 function App() {
 	const [checked, setChecked] = useState(false);
@@ -52,20 +53,35 @@ function App() {
 	};
 
 	const [showTooltip, setShowTooltip] = useState<boolean>(false);
-
 	const [value, setValue] = useState('')
+	const [textAreaValue, setTextAreaValue] = useState('')
 
 	return (
 		<>
 			<main>
 				<div className='flex flex-col gap-12pxr p-16pxr'>
-					<div className='h-100pxr'></div>
+					<div className='h-10pxr'></div>
+					<div>
+						<b>TextArea</b>
+					</div>
+					<div className='flex flex gap-10 items-center justify-center gap-8pxr'>
+						<STextArea 
+							value={textAreaValue} 
+							onChange={(e) => setTextAreaValue(e.target.value)}
+						/>
+						{textAreaValue}
+					</div>
 					<div>
 						<b>Input</b>
 					</div>
-					<div className='flex flex-col items-center justify-center gap-8pxr'>
-						<SInput value={value} onChange={(e) => setValue(e.target.value)}/>
-						<SInput value={value} onChange={(e) => setValue(e.target.value)} label='라벨임' labelType='addon'/>
+					<div className='flex items-center justify-center gap-8pxr'>
+						<SInput 
+							password={true} 
+							rule={/^.{5,}$/} 
+							errorMsg='5글자 이상이어야 합니다.' 
+							value={value} 
+							onChange={(e) => setValue(e.target.value)}
+						/>
 						{value}
 					</div>
 					<div>
