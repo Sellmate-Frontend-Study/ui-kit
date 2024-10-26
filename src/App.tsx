@@ -121,6 +121,9 @@ function App() {
 		<>
 			<main>
 				<div className='flex flex-col gap-12pxr p-16pxr'>
+				<div>
+	
+				</div>
 					<div>
 						<b>Input</b>
 					</div>
