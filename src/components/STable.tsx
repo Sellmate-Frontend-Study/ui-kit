@@ -20,7 +20,8 @@ export interface STableProps {
 const ResizeIcon = ({ handleResize }: ResizeIconProps) => (
   <span
     onMouseDown={handleResize}
-    className="absolute right-0 top-1/2 h-16pxr w-4pxr cursor-col-resize bg-transparent border-l border-r border-Grey_Lighten-2 -translate-y-1/2 z-100 select-none"/>
+    className="absolute right-0 top-1/2 h-16pxr w-4pxr cursor-col-resize bg-transparent border-l border-r border-Grey_Lighten-2 -translate-y-1/2 select-none"
+  />
 );
 
 const STable = ({ headers, data, resizable = false }: STableProps) => {
@@ -50,15 +51,15 @@ const STable = ({ headers, data, resizable = false }: STableProps) => {
   };
 
   return (
-    <div className={`w-full overflow-x-auto border-l border-r border-t`}>
-      <table className="w-full border-collapse table-fixed">
+    <div className={`w-full overflow-x-auto border rounded-lg border-b-0 border-collapse`}>
+      <table className="w-full table-fixed">
         <thead >
           <tr>
             {headers.map((header, i) => (
               <th
                 key={header.field}
                 style={{width: columnWidths[i]}}
-                className="relative px-16pxr py-8pxr border-b text-center"
+                className="relative px-16pxr py-8pxr border-b bg-Blue_C_Lighten-8 text-center"
               >
                 <div className="overflow-hidden whitespace-nowrap text-ellipsis truncate">
                   {header.label}
@@ -77,7 +78,7 @@ const STable = ({ headers, data, resizable = false }: STableProps) => {
                 <td
                   key={`${header.field}-${rowIndex}`}
                   style={{width: columnWidths[headerIndex]}}
-                  className="px-16pxr py-8pxr border-b  text-center"
+                  className="px-16pxr py-8pxr border-b text-center"
                 >
                   <div className="overflow-hidden whitespace-nowrap text-ellipsis truncate">
                     {row[header.field] || '-'}
