@@ -13,6 +13,7 @@ import STooltip from './components/STooltip';
 import SToggle from './components/SToggle';
 import SCaution from './components/SCaution';
 import SInput from './components/SInput';
+import STable from './components/STable';
 
 function App() {
 	const [checked, setChecked] = useState(false);
@@ -120,6 +121,14 @@ function App() {
 	return (
 		<>
 			<main>
+				<div className='flex flex-col gap-12pxr p-16pxr'>
+					<STable
+						tableClass='h-300pxr w-500pxr'
+						resizable
+						stickyHeader
+						scrollHandle={() => console.log(1)}
+					/>
+				</div>
 				<div className='flex flex-col gap-12pxr p-16pxr'>
 					<div>
 						<b>Input</b>
