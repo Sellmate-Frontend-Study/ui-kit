@@ -13,6 +13,7 @@ import STooltip from './components/STooltip';
 import SToggle from './components/SToggle';
 import SCaution from './components/SCaution';
 import SInput from './components/SInput';
+import STable from './components/STable';
 
 function App() {
 	const [checked, setChecked] = useState(false);
@@ -116,11 +117,155 @@ function App() {
 		newFormData[idx].value = e.target.value; // 특정 인덱스의 value 업데이트
 		setFormData(newFormData); // 상태 업데이트
 	};
+	const headers = [
+		{
+      name: 'product_code',
+      label: '상품코드',
+      field: 'product_code',
+    },
+    {
+      name: 'supplier_name',
+      label: '공급처명',
+      field: 'supplier_name',
+    },
+    {
+      name: '상품명',
+      label: '상품명sssssssss',
+      field: '상품명',
+			width: 200
+    },
+    {
+      name: '옵션명',
+      label: '옵션명',
+      field: '옵션명'
+    },
+    {
+      name: '발주수량',
+      label: '발주수량',
+      field: '발주수량',
+    },
+    {
+      name: 'RFID발급할수량',
+      label: 'RFID 발급할 수량',
+      field: 'RFID발급할수량',
+    },
+  ];
+
+  const data = [
+		{
+			id: 1,
+			barcode_no: 'M87017K2C',
+			product_code: 'M87017K2C',
+			supplier_name: 'UPTOWNHOLIC',
+			상품명: 'UPTOWNHOLIC Before She Broke Yourzzzzzzzzzzzzzz',
+			옵션명: '베이지, 235',
+			발주수량: 2000,
+			RFID발급할수량: 2000,
+		},
+		{
+			id: 2,
+			barcode_no: 'M87017K1C',
+			product_code: 'M87017K1C',
+			supplier_name: 'UPTOWNHOLIC',
+			상품명: 'UPTOWNHOLIC Before She Broke Your',
+			옵션명: '베이지, 230',
+			발주수량: 100,
+			RFID발급할수량: 100,
+			classes: 'text-red',
+		},
+		{
+			id: 3,
+			barcode_no: 'M87017K2C',
+			product_code: 'M87017K2C',
+			supplier_name: 'UPTOWNHOLIC',
+			상품명: 'UPTOWNHOLIC Before She Broke Yourzzzzzzzzzzzzzz',
+			옵션명: '베이지, 235',
+			발주수량: 2000,
+			RFID발급할수량: 2000,
+		},
+		{
+			id: 4,
+			barcode_no: 'M87017K1C',
+			product_code: 'M87017K1C',
+			supplier_name: 'UPTOWNHOLIC',
+			상품명: 'UPTOWNHOLIC Before She Broke Your',
+			옵션명: '베이지, 230',
+			발주수량: 100,
+			RFID발급할수량: 100,
+		},
+		{
+			id: 5,
+			barcode_no: 'M87017K2C',
+			product_code: 'M87017K2C',
+			supplier_name: 'UPTOWNHOLIC',
+			상품명: 'UPTOWNHOLIC Before She Broke Yourzzzzzzzzzzzzzz',
+			옵션명: '베이지, 235',
+			발주수량: 2000,
+			RFID발급할수량: 2000,
+		},
+		{
+			id: 6,
+			barcode_no: 'M87017K1C',
+			product_code: 'M87017K1C',
+			supplier_name: 'UPTOWNHOLIC',
+			상품명: 'UPTOWNHOLIC Before She Broke Your',
+			옵션명: '베이지, 230',
+			발주수량: 100,
+			RFID발급할수량: 100,
+		},
+		{
+			id: 7,
+			barcode_no: 'M87017K1C',
+			product_code: 'M87017K1C',
+			supplier_name: 'UPTOWNHOLIC',
+			상품명: 'UPTOWNHOLIC Before She Broke Your',
+			옵션명: '베이지, 230',
+			발주수량: 100,
+			RFID발급할수량: 100,
+		},
+		{
+			id: 8,
+			barcode_no: 'M87017K1C',
+			product_code: 'M87017K1C',
+			supplier_name: 'UPTOWNHOLIC',
+			상품명: 'UPTOWNHOLIC Before She Broke Your',
+			옵션명: '베이지, 230',
+			발주수량: 100,
+			RFID발급할수량: 100,
+		},
+		{
+			id: 9,
+			barcode_no: 'M87017K1C',
+			product_code: 'M87017K1C',
+			supplier_name: 'UPTOWNHOLIC',
+			상품명: 'UPTOWNHOLIC Before She Broke Your',
+			옵션명: '베이지, 230',
+			발주수량: 100,
+			RFID발급할수량: 100,
+		},
+		{
+			id: 10,
+			barcode_no: 'M87017K1C',
+			product_code: 'M87017K1C',
+			supplier_name: 'UPTOWNHOLIC',
+			상품명: 'UPTOWNHOLIC Before She Broke Your',
+			옵션명: '베이지, 230',
+			발주수량: 100,
+			RFID발급할수량: 100,
+		},
+  ];
 
 	return (
 		<>
 			<main>
 				<div className='flex flex-col gap-12pxr p-16pxr'>
+				<div className='p-8'>
+					<STable
+						headers={headers}
+						data={data}
+						resizable={true}
+					></STable>
+				</div>
 					<div>
 						<b>Input</b>
 					</div>
