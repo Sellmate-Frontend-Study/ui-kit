@@ -1,4 +1,8 @@
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
+import ArrowLeft from '../assets/ArrowLeft.svg';
+import ArrowLeftTwo from '../assets/ArrowLeftTwo.svg';
+import ArrowRight from '../assets/ArrowRight.svg';
+import ArrowRightTwo from '../assets/ArrowRightTwo.svg';
 
 const sampleHeader = [
 	{ label: 'Name', name: 'name', headerClass: '', columnClass: 'text-left' },
@@ -15,12 +19,12 @@ const sampleHeader = [
 		name: 'start_date',
 		headerClass: '',
 		columnClass: 'text-left',
-		node: (
-			<div className='flex justify-between'>
-				<div>start date</div>
-				<button>test</button>
-			</div>
-		),
+		// node: (
+		// 	<div className='flex justify-between'>
+		// 		<div>start date</div>
+		// 		<button>test</button>
+		// 	</div>
+		// ),
 	},
 	{
 		label: 'Salary',
@@ -322,6 +326,14 @@ const sampleData = [
 	},
 ];
 
+const pageNumberWidth = {
+	units: 26,
+	tens: 36,
+	hundereds: 42,
+	thousands: 50,
+	tenThousands: 58,
+};
+
 export interface STableColumn {
 	label: string;
 	name: string;
@@ -331,6 +343,12 @@ export interface STableColumn {
 	format?: (data: string | number) => string | number;
 }
 
+export interface PaginationMeta {
+	currentPage: number;
+	lastPage: number;
+	itemPerPage?: number;
+}
+
 export interface STableProps {
 	tableColumn?: STableColumn[];
 	tableData?: Record<string, string | number>[];
@@ -338,6 +356,13 @@ export interface STableProps {
 	resizable?: boolean;
 	stickyHeader?: boolean;
 	scrollHandle?: () => void;
+	usePagination?: boolean;
+	pagePerPagination?: number;
+	paginationClass?: string;
+	paginationType?: 'single' | 'multiple';
+	usePaginationLimit?: boolean;
+	fetchFn?: (meta: PaginationMeta) => Promise<void>;
+	meta?: PaginationMeta;
 }
 
 const STable = ({
@@ -347,129 +372,273 @@ const STable = ({
 	resizable = false,
 	stickyHeader = false,
 	scrollHandle,
+	usePagination = false,
+	pagePerPagination = 5,
+	paginationClass,
+	paginationType = 'multiple',
+	usePaginationLimit,
+	meta = {
+		currentPage: 1,
+		lastPage: 20,
+		itemPerPage: 5,
+	},
+	fetchFn,
 }: STableProps) => {
-	const [cellWidth, setCellWidth] = useState<string[] | null>(null);
-	const [resizableTarget, setResizableTarget] = useState<{
-		startX: any;
-		startWidth: any;
-		cuurentCol: any;
-	} | null>(null);
-	const table = useRef<ReactNode | null>(null);
+	const [pageNumber, setPageNumber] = useState(meta.currentPage);
+	const [pagination, setPagination] = useState(1);
 
-	useEffect(() => {
-		if (table.current) {
-			const tableElement = table.current as any;
-			const thArray = Array.from(tableElement.querySelectorAll('thead tr th'));
-			setCellWidth(thArray.map((th: any) => th.offsetWidth));
-		}
-	}, []);
+	let startX: number, currentCol: HTMLElement | null, startWidth: number;
 
 	const theadClass =
-		'relative bg-Blue_C_Lighten-8 text-Grey_Darken-5 font-medium leading-20pxr px-20pxr py-8pxr';
+		'relative bg-Blue_C_Lighten-8 text-Grey_Darken-5 font-medium leading-20pxr px-20pxr py-8pxr border-b border-Grey_Lighten-3';
 
 	const resizableDivClass =
 		'resizable-div h-16pxr w-4pxr cursor-col-resize border-x border-Grey_Lighten-2 absolute top-10pxr';
-	// 'resizable-div h-16pxr w-2pxr cursor-col-resize border-l border-Grey_Lighten-2 absolute top-10pxr';
 
-	const tdClass = 'py-12pxr px-16pxr leading-20pxr';
+	const tdClass =
+		'py-12pxr px-16pxr leading-20pxr border-b border-Grey_Lighten-3';
 	const tbodyClass = '';
+	const pageNumberClass =
+		'leading-20pxr py-3pxr px-9pxr flex items-center justify-center rounded-14pxr text-Grey_Darken-2 border border-transparent hover:border-Blue_B_Lighten-1';
+	const activePageNumberClass = 'bg-Blue_B_Lighten-1 text-[#fff]';
+	const paginationNavButtonClass =
+		'rounded-full border border-transparent p-7pxr hover:border-Blue_B_Lighten-1';
 
-	function mouseMoveHandler(e: MouseEvent, position: string) {
-		const targetElement = e.target.parentElement;
-		// position === 'left'
-		// 	? e.target.parentElement.previousElementSibling
+	function mouseMoveHandler(e: React.MouseEvent) {
+		const targetElement = (e.target as HTMLElement).parentElement;
+		startX = e.pageX;
+		currentCol = targetElement;
+		startWidth = targetElement ? targetElement.offsetWidth : 0;
 
-		const newTargetData = {
-			startX: e.pageX,
-			currentCol: targetElement,
-			startWidth: targetElement.offsetWidth,
-		};
-		setResizableTarget(newTargetData);
-	}
-
-	useEffect(() => {
-		document.addEventListener('mousemove', resizeColumn);
+		document.addEventListener('mousemove', (evt) => resizeColumn(evt));
 		document.addEventListener('mouseup', stopResize);
-		return () => {
-			console.log(1);
 
+		function resizeColumn(mouseMoveEvent: MouseEvent) {
+			if (currentCol) {
+				const newWidth = startWidth + (mouseMoveEvent.pageX - startX);
+				currentCol.style.width = `${newWidth}px`;
+				currentCol.style.minWidth = `${newWidth}px`;
+				currentCol.style.maxWidth = `${newWidth}px`;
+			}
+		}
+
+		function stopResize() {
+			currentCol = null;
 			document.removeEventListener('mouseup', stopResize);
 			document.removeEventListener('mousemove', resizeColumn);
-		};
-	}, [resizableTarget]);
-
-	function resizeColumn(e) {
-		if (resizableTarget) {
-			const { startX, currentCol, startWidth } = resizableTarget;
-
-			const newWidth = startWidth + (e.pageX - startX);
-			currentCol.style.width = `${newWidth}px`;
-			currentCol.style.minWidth = `${newWidth}px`;
-			currentCol.style.maxWwidth = `${newWidth}px`;
 		}
 	}
 
-	function stopResize() {
-		setResizableTarget(null);
+	function firstPage() {
+		setPageNumber(1);
+		setPagination(1);
 	}
 
+	function lastPage() {
+		setPageNumber(meta.lastPage);
+		setPagination(Math.ceil(meta.lastPage / pagePerPagination));
+	}
+
+	function prevPage() {
+		const prevPage = pageNumber - 1;
+		if (prevPage > 0) {
+			setPageNumber(prevPage);
+		}
+	}
+	function nextPage() {
+		const nextPage = pageNumber + 1;
+		if (nextPage <= meta.lastPage) {
+			setPageNumber(nextPage);
+		}
+	}
+
+	useEffect(() => {
+		if (pageNumber > pagePerPagination * pagination)
+			setPagination((prev) => ++prev);
+
+		if (pageNumber <= pagePerPagination * (pagination - 1))
+			setPagination((prev) => --prev);
+
+		if (fetchFn) fetchFn(meta);
+	}, [pageNumber, pagination]);
+
+	const checkPaginationWidth = (number: number) => {
+		const numberLength = number.toString().length;
+		const numberDigits =
+			numberLength === 1
+				? 'units'
+				: numberLength === 2
+					? 'tens'
+					: numberLength === 3
+						? 'hundereds'
+						: numberLength === 4
+							? 'thousands'
+							: 'tenThousands';
+		const paginationWidth = pageNumberWidth[numberDigits];
+
+		return paginationWidth;
+	};
+
 	return (
-		<div
-			className={['relative overflow-auto', tableClass].join(' ')}
-			onScroll={scrollHandle}
-		>
-			<table
-				className='min-w-full'
-				ref={table}
+		<div>
+			<div
+				className={[
+					'relative overflow-auto rounded-8pxr border border-Grey_Lighten-3',
+					tableClass,
+				].join(' ')}
+				onScroll={scrollHandle}
 			>
-				<thead>
-					<tr>
-						{tableColumn.map((column, columnIdx) => (
-							<th
-								className={[
-									theadClass,
-									stickyHeader && 'sticky top-0',
-									cellWidth && `w-${cellWidth[columnIdx]}pxr`,
-									column.columnClass,
-								].join(' ')}
-							>
-								{/* {resizable && (
-									<div
-										className={[resizableDivClass, 'resizable-div left-0'].join(' ')}
-										data-index={columnIdx}
-										onMouseDown={(event) => mouseMoveHandler(event, 'left')}
-									></div>
-									// onMouseUp={() => setResizableTarget(null)}
-									// // onMouseMove={(event) => mouseMoveHandler(event, 'left')}
-								)} */}
-								{column.node ? (column.node as ReactNode) : (column.label as string)}
-								{resizable && columnIdx !== tableColumn.length - 1 && (
-									<div
-										className={[resizableDivClass, 'right-0'].join(' ')}
-										data-index={columnIdx}
-										onMouseDown={(event) => mouseMoveHandler(event, 'right')}
-									></div>
-								)}
-							</th>
-						))}
-					</tr>
-				</thead>
-				<tbody className={[tbodyClass].join(' ')}>
-					{tableData.map((dataRow) => (
-						<tr className=''>
-							{tableColumn.map((column) => {
-								const text = dataRow[column.name as string];
-								const formattedText = column.format ? column.format(text) : text;
-								return (
-									<td className={[column.columnClass, tdClass].join(' ')}>
-										{formattedText}
-									</td>
-								);
-							})}
+				<table className='min-w-full border-separate border-spacing-0'>
+					<thead>
+						<tr>
+							{tableColumn.map((column, columnIdx) => (
+								<th
+									className={[
+										theadClass,
+										stickyHeader && 'sticky top-0',
+										column.columnClass,
+									].join(' ')}
+								>
+									{column.node ? (column.node as ReactNode) : (column.label as string)}
+									{resizable && columnIdx !== tableColumn.length - 1 && (
+										<div
+											className={[resizableDivClass, 'right-0'].join(' ')}
+											data-index={columnIdx}
+											onMouseDown={(event) => mouseMoveHandler(event)}
+										></div>
+									)}
+								</th>
+							))}
 						</tr>
-					))}
-				</tbody>
-			</table>
+					</thead>
+					<tbody className={[tbodyClass].join(' ')}>
+						{tableData.map((dataRow, rowIndex) => (
+							<tr className=''>
+								{tableColumn.map((column) => {
+									const text = dataRow[column.name as string];
+									const formattedText = column.format ? column.format(text) : text;
+									return (
+										<td
+											className={[column.columnClass, tdClass].join(' ')}
+											style={
+												rowIndex === tableData.length - 1 ? { borderBottom: 'none' } : {}
+											}
+										>
+											{formattedText}
+										</td>
+									);
+								})}
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+			{usePagination && (
+				<div
+					className={[
+						'relative flex w-full items-center justify-center gap-8pxr',
+						paginationClass,
+					].join(' ')}
+				>
+					<div
+						className={`${((paginationType === 'multiple' && pagination === 1) || (paginationType === 'single' && pageNumber === 1)) && 'opacity-0'}`}
+					>
+						<button
+							className={['mr-8pxr', paginationNavButtonClass].join(' ')}
+							onClick={firstPage}
+						>
+							<img src={ArrowLeftTwo} />
+						</button>
+						<button
+							className={paginationNavButtonClass}
+							onClick={prevPage}
+						>
+							<img src={ArrowLeft} />
+						</button>
+					</div>
+					<div className='flex gap-8pxr'>
+						{paginationType === 'multiple' ? (
+							Array.from({ length: pagePerPagination }, (_, index) => {
+								const pageIndex = (pagination - 1) * pagePerPagination + index + 1;
+								const numberLength = (pagination * pagePerPagination).toString().length;
+								const numberDigits =
+									numberLength === 1
+										? 'units'
+										: numberLength === 2
+											? 'tens'
+											: numberLength === 3
+												? 'hundereds'
+												: numberLength === 4
+													? 'thousands'
+													: 'tenThousands';
+
+								return (
+									<button
+										className={[
+											pageNumberClass,
+											pageIndex === pageNumber && activePageNumberClass,
+											// `w-${pageNumberWidth[numberDigits]}pxr`,
+										].join(' ')}
+										style={{ width: `${pageNumberWidth[numberDigits]}px` }}
+										onClick={() => setPageNumber(pageIndex)}
+									>
+										{pageIndex}
+									</button>
+								);
+							})
+						) : (
+							<>
+								<div
+									className={[pageNumberClass].join(' ')}
+									style={{ width: `${checkPaginationWidth(pageNumber)}px` }}
+								>
+									{pageNumber}
+								</div>
+								<div className={[pageNumberClass].join(' ')}>/</div>
+								<div className={[pageNumberClass].join(' ')}>{meta.lastPage}</div>
+							</>
+						)}
+					</div>
+					<div
+						className={`${((paginationType === 'multiple' && pagination === Math.ceil(meta.lastPage / pagePerPagination)) || (paginationType === 'single' && pageNumber === meta.lastPage)) && 'opacity-0'}`}
+					>
+						<button
+							className={['mr-8pxr', paginationNavButtonClass].join(' ')}
+							onClick={nextPage}
+						>
+							<img src={ArrowRight} />
+						</button>
+						<button
+							className={paginationNavButtonClass}
+							onClick={lastPage}
+						>
+							<img src={ArrowRightTwo} />
+						</button>
+					</div>
+
+					{usePaginationLimit && (
+						<select
+							className='absolute right-10pxr top-0 h-28pxr rounded-2pxr border border-Grey_Lighten-1'
+							onChange={(value) => {
+								if (fetchFn) {
+									const newMeta = {
+										currentPage: pageNumber,
+										lastPage: meta.lastPage,
+										itemPerPage: Number(value),
+									};
+
+									fetchFn(newMeta);
+								}
+							}}
+						>
+							<option value='5'>5개씩 보기</option>
+							<option value='10'>10개씩 보기</option>
+							<option value='20'>20개씩 보기</option>
+							<option value='50'>50개씩 보기</option>
+						</select>
+					)}
+				</div>
+			)}
 		</div>
 	);
 };

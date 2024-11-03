@@ -121,11 +121,25 @@ function App() {
 	return (
 		<>
 			<main>
-				<div className='flex flex-col gap-12pxr p-16pxr'>
+				<div className='flex w-800pxr flex-col gap-12pxr p-16pxr'>
 					<STable
-						tableClass='h-300pxr w-500pxr'
+						tableClass='h-300pxr'
 						resizable
 						stickyHeader
+						usePagination
+						fetchFn={async () => {
+							console.log(1);
+						}}
+						scrollHandle={() => console.log(1)}
+					/>
+				</div>
+				<div className='flex w-800pxr flex-col gap-12pxr p-16pxr'>
+					<STable
+						tableClass='h-300pxr'
+						resizable
+						stickyHeader
+						usePagination
+						paginationType='single'
 						scrollHandle={() => console.log(1)}
 					/>
 				</div>
