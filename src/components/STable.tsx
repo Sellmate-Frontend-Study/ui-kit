@@ -16,7 +16,10 @@ export interface STableProps {
 	headers: Header[];
 	resizable?: boolean;
 	pagination?: boolean;
-	changePage?: (page: number) => {
+	changePage?: (
+		page: number,
+		perPage: number
+	) => {
 		currentPage: number;
 		totalPages: number;
 		data: Record<string, any>[];
@@ -41,10 +44,11 @@ const STable = ({
 	const [data, setData] = useState<Record<string, any>[]>([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
+	const [perPage, setPerPage] = useState(15);
 
 	const fetchData = useCallback(
-		(page: number) => {
-			const res = changePage(page);
+		(currentPage: number, perPage: number) => {
+			const res = changePage(currentPage, perPage);
 			setData(res.data);
 			setCurrentPage(res.currentPage);
 			setTotalPages(res.totalPages);
@@ -53,8 +57,8 @@ const STable = ({
 	);
 
 	useEffect(() => {
-		fetchData(currentPage);
-	}, [currentPage, fetchData]);
+		fetchData(currentPage, perPage);
+	}, [currentPage, perPage, fetchData]);
 
 	const handleResize = (i: number, e: React.MouseEvent) => {
 		e.preventDefault();
@@ -125,6 +129,8 @@ const STable = ({
 					currentPage={currentPage}
 					totalPages={totalPages}
 					changePage={(page) => setCurrentPage(page)}
+					perPage={perPage}
+					setPerPage={setPerPage}
 				></SPagination>
 			)}
 		</div>

@@ -256,9 +256,9 @@ function App() {
 		},
 	];
 
-	const fetchData = (currentPage: number) => {
+	const fetchData = (currentPage: number, perPage: number) => {
 		try {
-			console.log('fetch', currentPage);
+			console.log('fetch', currentPage, perPage);
 			return {
 				currentPage: currentPage,
 				totalPages: 8,

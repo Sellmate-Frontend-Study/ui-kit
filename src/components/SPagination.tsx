@@ -6,12 +6,16 @@ interface SPaginationProps {
 	currentPage: number;
 	totalPages: number;
 	changePage: (page: number) => void;
+	perPage: number;
+	setPerPage: (newPerPage: number) => void;
 }
 
 const SPagination = ({
 	currentPage,
 	totalPages,
 	changePage,
+	perPage,
+	setPerPage,
 }: SPaginationProps) => {
 	const pageNum = getPageNum(currentPage, totalPages);
 
@@ -27,8 +31,13 @@ const SPagination = ({
 		}
 	}, [totalPages, currentPage, changePage]);
 
+	const handleChangePerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		setPerPage(Number(e.target.value));
+		changePage(1);
+	};
+
 	return (
-		<div className='mt-2pxr flex h-37pxr w-full items-center justify-center space-x-2 rounded-5pxr border bg-Grey_Lighten-6'>
+		<div className='relative mt-2pxr flex h-37pxr w-full items-center justify-center space-x-2 rounded-5pxr border bg-Grey_Lighten-6'>
 			{currentPage > 1 && (
 				<ArrowLeftEnd12
 					className='cursor-pointer'
@@ -67,6 +76,15 @@ const SPagination = ({
 					onClick={last}
 				></ArrowRightEnd12>
 			)}
+
+			<select
+				value={perPage}
+				onChange={handleChangePerPage}
+				className='absolute right-5 w-76pxr rounded-1pxr border px-5pxr py-2pxr'
+			>
+				<option value={10}>10개</option>
+				<option value={15}>15개</option>
+			</select>
 		</div>
 	);
 };
