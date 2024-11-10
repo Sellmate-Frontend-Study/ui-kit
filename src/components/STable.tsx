@@ -1,8 +1,5 @@
-import { ReactNode, useEffect, useState } from 'react';
-import ArrowLeft from '../assets/ArrowLeft.svg';
-import ArrowLeftTwo from '../assets/ArrowLeftTwo.svg';
-import ArrowRight from '../assets/ArrowRight.svg';
-import ArrowRightTwo from '../assets/ArrowRightTwo.svg';
+import { ReactNode } from 'react';
+import Pagenation, { PaginationMeta } from './Pagenation';
 
 const sampleHeader = [
 	{ label: 'Name', name: 'name', headerClass: '', columnClass: 'text-left' },
@@ -326,14 +323,6 @@ const sampleData = [
 	},
 ];
 
-const pageNumberWidth = {
-	units: 26,
-	tens: 36,
-	hundereds: 42,
-	thousands: 50,
-	tenThousands: 58,
-};
-
 export interface STableColumn {
 	label: string;
 	name: string;
@@ -341,12 +330,6 @@ export interface STableColumn {
 	columnClass?: string;
 	node?: ReactNode;
 	format?: (data: string | number) => string | number;
-}
-
-export interface PaginationMeta {
-	currentPage: number;
-	lastPage: number;
-	itemPerPage?: number;
 }
 
 export interface STableProps {
@@ -361,6 +344,7 @@ export interface STableProps {
 	paginationClass?: string;
 	paginationType?: 'single' | 'multiple';
 	usePaginationLimit?: boolean;
+	noDataLabel?: string;
 	fetchFn?: (meta: PaginationMeta) => Promise<void>;
 	meta?: PaginationMeta;
 }
@@ -384,9 +368,6 @@ const STable = ({
 	},
 	fetchFn,
 }: STableProps) => {
-	const [pageNumber, setPageNumber] = useState(meta.currentPage);
-	const [pagination, setPagination] = useState(1);
-
 	let startX: number, currentCol: HTMLElement | null, startWidth: number;
 
 	const theadClass =
@@ -398,11 +379,6 @@ const STable = ({
 	const tdClass =
 		'py-12pxr px-16pxr leading-20pxr border-b border-Grey_Lighten-3';
 	const tbodyClass = '';
-	const pageNumberClass =
-		'leading-20pxr py-3pxr px-9pxr flex items-center justify-center rounded-14pxr text-Grey_Darken-2 border border-transparent hover:border-Blue_B_Lighten-1';
-	const activePageNumberClass = 'bg-Blue_B_Lighten-1 text-[#fff]';
-	const paginationNavButtonClass =
-		'rounded-full border border-transparent p-7pxr hover:border-Blue_B_Lighten-1';
 
 	function mouseMoveHandler(e: React.MouseEvent) {
 		const targetElement = (e.target as HTMLElement).parentElement;
@@ -428,56 +404,6 @@ const STable = ({
 			document.removeEventListener('mousemove', resizeColumn);
 		}
 	}
-
-	function firstPage() {
-		setPageNumber(1);
-		setPagination(1);
-	}
-
-	function lastPage() {
-		setPageNumber(meta.lastPage);
-		setPagination(Math.ceil(meta.lastPage / pagePerPagination));
-	}
-
-	function prevPage() {
-		const prevPage = pageNumber - 1;
-		if (prevPage > 0) {
-			setPageNumber(prevPage);
-		}
-	}
-	function nextPage() {
-		const nextPage = pageNumber + 1;
-		if (nextPage <= meta.lastPage) {
-			setPageNumber(nextPage);
-		}
-	}
-
-	useEffect(() => {
-		if (pageNumber > pagePerPagination * pagination)
-			setPagination((prev) => ++prev);
-
-		if (pageNumber <= pagePerPagination * (pagination - 1))
-			setPagination((prev) => --prev);
-
-		if (fetchFn) fetchFn(meta);
-	}, [pageNumber, pagination]);
-
-	const checkPaginationWidth = (number: number) => {
-		const numberLength = number.toString().length;
-		const numberDigits =
-			numberLength === 1
-				? 'units'
-				: numberLength === 2
-					? 'tens'
-					: numberLength === 3
-						? 'hundereds'
-						: numberLength === 4
-							? 'thousands'
-							: 'tenThousands';
-		const paginationWidth = pageNumberWidth[numberDigits];
-
-		return paginationWidth;
-	};
 
 	return (
 		<div>
@@ -534,110 +460,14 @@ const STable = ({
 				</table>
 			</div>
 			{usePagination && (
-				<div
-					className={[
-						'relative flex w-full items-center justify-center gap-8pxr',
-						paginationClass,
-					].join(' ')}
-				>
-					<div
-						className={`${((paginationType === 'multiple' && pagination === 1) || (paginationType === 'single' && pageNumber === 1)) && 'opacity-0'}`}
-					>
-						<button
-							className={['mr-8pxr', paginationNavButtonClass].join(' ')}
-							onClick={firstPage}
-						>
-							<img src={ArrowLeftTwo} />
-						</button>
-						<button
-							className={paginationNavButtonClass}
-							onClick={prevPage}
-						>
-							<img src={ArrowLeft} />
-						</button>
-					</div>
-					<div className='flex gap-8pxr'>
-						{paginationType === 'multiple' ? (
-							Array.from({ length: pagePerPagination }, (_, index) => {
-								const pageIndex = (pagination - 1) * pagePerPagination + index + 1;
-								const numberLength = (pagination * pagePerPagination).toString().length;
-								const numberDigits =
-									numberLength === 1
-										? 'units'
-										: numberLength === 2
-											? 'tens'
-											: numberLength === 3
-												? 'hundereds'
-												: numberLength === 4
-													? 'thousands'
-													: 'tenThousands';
-
-								return (
-									<button
-										className={[
-											pageNumberClass,
-											pageIndex === pageNumber && activePageNumberClass,
-											// `w-${pageNumberWidth[numberDigits]}pxr`,
-										].join(' ')}
-										style={{ width: `${pageNumberWidth[numberDigits]}px` }}
-										onClick={() => setPageNumber(pageIndex)}
-									>
-										{pageIndex}
-									</button>
-								);
-							})
-						) : (
-							<>
-								<div
-									className={[pageNumberClass].join(' ')}
-									style={{ width: `${checkPaginationWidth(pageNumber)}px` }}
-								>
-									{pageNumber}
-								</div>
-								<div className={[pageNumberClass].join(' ')}>/</div>
-								<div className={[pageNumberClass].join(' ')}>{meta.lastPage}</div>
-							</>
-						)}
-					</div>
-					<div
-						className={`${((paginationType === 'multiple' && pagination === Math.ceil(meta.lastPage / pagePerPagination)) || (paginationType === 'single' && pageNumber === meta.lastPage)) && 'opacity-0'}`}
-					>
-						<button
-							className={['mr-8pxr', paginationNavButtonClass].join(' ')}
-							onClick={nextPage}
-						>
-							<img src={ArrowRight} />
-						</button>
-						<button
-							className={paginationNavButtonClass}
-							onClick={lastPage}
-						>
-							<img src={ArrowRightTwo} />
-						</button>
-					</div>
-
-					{usePaginationLimit && (
-						<select
-							className='absolute right-10pxr top-0 h-28pxr rounded-2pxr border border-Grey_Lighten-1'
-							onChange={(value) => {
-								if (fetchFn) {
-									const newMeta = {
-										currentPage: pageNumber,
-										lastPage: meta.lastPage,
-										itemPerPage: Number(value),
-									};
-
-									fetchFn(newMeta);
-								}
-							}}
-						>
-							<option value='5'>5개씩 보기</option>
-							<option value='10'>10개씩 보기</option>
-							<option value='20'>20개씩 보기</option>
-							<option value='50'>50개씩 보기</option>
-						</select>
-					)}
-				</div>
+				<Pagenation
+					paginationClass={paginationClass}
+					usePaginationLimit={usePaginationLimit}
+					paginationType={paginationType}
+					pagePerPagination={pagePerPagination}
+					meta={meta}
+					fetchFn={fetchFn}
+				/>
 			)}
 		</div>
 	);
