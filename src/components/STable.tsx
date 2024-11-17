@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import Pagenation, { PaginationMeta } from './Pagenation';
+import Pagenation, { PaginationMeta } from './Pagination';
 
 const sampleHeader = [
 	{ label: 'Name', name: 'name', headerClass: '', columnClass: 'text-left' },

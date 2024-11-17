@@ -3,6 +3,7 @@ import ArrowLeft from '../assets/ArrowLeft.svg';
 import ArrowLeftTwo from '../assets/ArrowLeftTwo.svg';
 import ArrowRight from '../assets/ArrowRight.svg';
 import ArrowRightTwo from '../assets/ArrowRightTwo.svg';
+import SSelect from './SSelect';
 
 const pageNumberWidth: Record<number, number> = {
 	1: 26,
@@ -69,13 +70,21 @@ const Pagenation = ({
 	}
 
 	function prevPage() {
-		const prevPage = pageNumber - pagePerPagination;
+		const prevPage =
+			paginationType === 'single'
+				? pageNumber - 1
+				: pageNumber - pagePerPagination;
+
 		if (prevPage > 0) {
 			setPageNumber(prevPage);
 		}
 	}
 	function nextPage() {
-		const nextPage = pageNumber + pagePerPagination;
+		const nextPage =
+			paginationType === 'single'
+				? pageNumber + 1
+				: pageNumber + pagePerPagination;
+
 		if (nextPage <= meta.lastPage) {
 			setPageNumber(nextPage);
 		}
@@ -181,25 +190,28 @@ const Pagenation = ({
 			</div>
 
 			{usePaginationLimit && (
-				<select
-					className='absolute right-10pxr top-0 h-28pxr rounded-2pxr border border-Grey_Lighten-1'
-					onChange={(value) => {
-						if (fetchFn) {
-							const newMeta = {
-								currentPage: pageNumber,
-								lastPage: meta.lastPage,
-								itemPerPage: Number(value),
-							};
+				<div className='absolute right-10pxr top-0 w-150pxr'>
+					<SSelect
+						classname='w-full'
+						options={[
+							{ label: '10개씩 보기', value: 10 },
+							{ label: '20개씩 보기', value: 20 },
+							{ label: '30개씩 보기', value: 30 },
+							{ label: '40개씩 보기', value: 40 },
+						]}
+						handleChange={(value) => {
+							if (fetchFn) {
+								const newMeta = {
+									currentPage: pageNumber,
+									lastPage: meta.lastPage,
+									itemPerPage: Number(value[0].value),
+								};
 
-							fetchFn(newMeta);
-						}
-					}}
-				>
-					<option value='5'>5개씩 보기</option>
-					<option value='10'>10개씩 보기</option>
-					<option value='20'>20개씩 보기</option>
-					<option value='50'>50개씩 보기</option>
-				</select>
+								fetchFn(newMeta);
+							}
+						}}
+					></SSelect>
+				</div>
 			)}
 		</div>
 	);

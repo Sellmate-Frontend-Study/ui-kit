@@ -14,6 +14,7 @@ import SToggle from './components/SToggle';
 import SCaution from './components/SCaution';
 import SInput from './components/SInput';
 import STable from './components/STable';
+import SSelect from './components/SSelect';
 
 function App() {
 	const [checked, setChecked] = useState(false);
@@ -122,6 +123,27 @@ function App() {
 		<>
 			<main>
 				<div className='flex w-800pxr flex-col gap-12pxr p-16pxr'>
+					<SSelect
+						classname='w-200pxr'
+						options={[
+							{ label: '10개씩 보기', value: 10 },
+							{ label: '20개씩 보기', value: 20 },
+							{ label: '30개씩 보기', value: 30 },
+							{ label: '40개씩 보기', value: 40 },
+						]}
+					></SSelect>
+					<SSelect
+						classname='w-200pxr'
+						options={[
+							{ label: '10개씩 보기', value: 10 },
+							{ label: '20개씩 보기', value: 20 },
+							{ label: '30개씩 보기', value: 30 },
+							{ label: '40개씩 보기', value: 40 },
+						]}
+						disabled
+					></SSelect>
+				</div>
+				<div className='flex w-800pxr flex-col gap-12pxr p-16pxr'>
 					<STable
 						tableClass='h-300pxr'
 						resizable
@@ -131,6 +153,7 @@ function App() {
 							console.log(1);
 						}}
 						scrollHandle={() => console.log(1)}
+						usePaginationLimit
 					/>
 				</div>
 				<div className='flex w-800pxr flex-col gap-12pxr p-16pxr'>
