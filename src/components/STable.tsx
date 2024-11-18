@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import Pagenation, { PaginationMeta } from './Pagination';
+import { ReactNode, useEffect, useState } from 'react';
+import Pagination, { PaginationMeta } from './Pagination';
 
 const sampleHeader = [
 	{ label: 'Name', name: 'name', headerClass: '', columnClass: 'text-left' },
@@ -342,8 +342,8 @@ export interface STableProps {
 	usePagination?: boolean;
 	pagePerPagination?: number;
 	paginationClass?: string;
-	paginationType?: 'single' | 'multiple';
 	usePaginationLimit?: boolean;
+	useTotalData?: boolean;
 	noDataLabel?: string;
 	fetchFn?: (meta: PaginationMeta) => Promise<void>;
 	meta?: PaginationMeta;
@@ -359,8 +359,8 @@ const STable = ({
 	usePagination = false,
 	pagePerPagination = 5,
 	paginationClass,
-	paginationType = 'multiple',
 	usePaginationLimit,
+	useTotalData,
 	meta = {
 		currentPage: 1,
 		lastPage: 20,
@@ -368,14 +368,18 @@ const STable = ({
 	},
 	fetchFn,
 }: STableProps) => {
+	const [tableRow, setTableRow] = useState(tableData);
+	const [pageNumber, setPageNumber] = useState(meta.currentPage);
+	const [pagination, setPagination] = useState(1);
+	const [lastPage, setLastPage] = useState(meta.lastPage!);
+	const [itemPerPage, setItemPerPage] = useState(meta.itemPerPage!);
+	const [pagePerOnce, setPagePerOnce] = useState(pagePerPagination);
 	let startX: number, currentCol: HTMLElement | null, startWidth: number;
 
 	const theadClass =
 		'relative bg-Blue_C_Lighten-8 text-Grey_Darken-5 font-medium leading-20pxr px-20pxr py-8pxr border-b border-Grey_Lighten-3';
-
 	const resizableDivClass =
 		'resizable-div h-16pxr w-4pxr cursor-col-resize border-x border-Grey_Lighten-2 absolute top-10pxr';
-
 	const tdClass =
 		'py-12pxr px-16pxr leading-20pxr border-b border-Grey_Lighten-3';
 	const tbodyClass = '';
@@ -404,6 +408,30 @@ const STable = ({
 			document.removeEventListener('mousemove', resizeColumn);
 		}
 	}
+
+	useEffect(() => {
+		if (pageNumber > pagePerOnce * pagination) setPagination((prev) => ++prev);
+
+		if (pageNumber <= pagePerOnce * (pagination - 1))
+			setPagination((prev) => --prev);
+
+		if (fetchFn) fetchFn(meta);
+	}, [pageNumber, pagination, meta, fetchFn, pagePerOnce]);
+
+	useEffect(() => {
+		if (useTotalData && usePagination) {
+			const startIndex = (pageNumber - 1) * itemPerPage || 0;
+			const endIndex = startIndex + itemPerPage;
+			const lastPage = Math.ceil(tableData.length / itemPerPage);
+			setTableRow(tableData.slice(startIndex, endIndex));
+			setLastPage(lastPage);
+			setPagePerOnce((prev) => {
+				console.log(prev > lastPage ? lastPage : prev);
+
+				return prev > lastPage ? lastPage : prev;
+			});
+		}
+	}, [pageNumber, itemPerPage, usePagination, useTotalData, tableData]);
 
 	return (
 		<div>
@@ -438,7 +466,7 @@ const STable = ({
 						</tr>
 					</thead>
 					<tbody className={[tbodyClass].join(' ')}>
-						{tableData.map((dataRow, rowIndex) => (
+						{tableRow.map((dataRow, rowIndex) => (
 							<tr className=''>
 								{tableColumn.map((column) => {
 									const text = dataRow[column.name as string];
@@ -460,13 +488,19 @@ const STable = ({
 				</table>
 			</div>
 			{usePagination && (
-				<Pagenation
+				<Pagination
+					pageNumber={pageNumber}
+					pagination={pagination}
 					paginationClass={paginationClass}
+					paginationType='multiple'
 					usePaginationLimit={usePaginationLimit}
-					paginationType={paginationType}
-					pagePerPagination={pagePerPagination}
-					meta={meta}
+					pagePerPagination={pagePerOnce}
+					lastPage={lastPage}
 					fetchFn={fetchFn}
+					setPageNumber={setPageNumber}
+					setPagination={setPageNumber}
+					setItemPerPage={setItemPerPage}
+					setLastPage={setLastPage}
 				/>
 			)}
 		</div>

@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import SelectOptions, { SelectOptionProps } from './SelectOptions';
 
 export interface SelectProps {
+	defaultValue?: SelectOptionProps[];
 	options: { label: string; value: string | number }[];
 	classname?: string;
 	placeholder?: string;
@@ -12,13 +13,15 @@ export interface SelectProps {
 }
 
 const SSelect = ({
+	defaultValue,
 	options,
 	classname,
 	placeholder = '선택',
 	disabled = false,
+	handleChange,
 }: SelectProps) => {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	const [value, setValue] = useState<SelectOptionProps[]>([]);
+	const [value, setValue] = useState<SelectOptionProps[]>(defaultValue || []);
 	const selectRef = useRef<HTMLButtonElement>(null);
 	const id = useId();
 
@@ -41,10 +44,10 @@ const SSelect = ({
 
 	const handleClick = (arg?: SelectOptionProps) => {
 		setIsDropdownOpen(false);
+		console.log(arg);
 
-		if (arg) {
-			setValue([arg]);
-		}
+		if (arg) setValue([arg]);
+		if (handleChange && arg) handleChange([arg]);
 	};
 
 	return (

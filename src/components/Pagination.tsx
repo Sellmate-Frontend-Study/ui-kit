@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import ArrowLeft from '../assets/ArrowLeft.svg';
 import ArrowLeftTwo from '../assets/ArrowLeftTwo.svg';
 import ArrowRight from '../assets/ArrowRight.svg';
@@ -19,39 +19,37 @@ export interface PaginationMeta {
 	itemPerPage?: number;
 }
 export interface PaginationProps {
-	pagePerPagination?: number;
-	itemPerPage?: number;
+	pageNumber: number;
+	pagination: number;
+	paginationType?: 'single' | 'multiple';
+	pagePerPagination: number;
+	lastPage: number;
 	paginationClass?: string;
-	paginationType?: 'multiple' | 'single';
 	usePaginationLimit?: boolean;
-	meta?: PaginationMeta;
+	setPageNumber: Dispatch<SetStateAction<number>>;
+	setPagination: Dispatch<SetStateAction<number>>;
+	setItemPerPage: Dispatch<SetStateAction<number>>;
+	setLastPage: Dispatch<SetStateAction<number>>;
 	fetchFn?: (meta: PaginationMeta) => Promise<void>;
 }
 
-const Pagenation = ({
-	pagePerPagination = 5,
+const Pagination = ({
+	pageNumber,
+	pagination,
+	paginationType = 'single',
+	pagePerPagination,
 	paginationClass,
-	paginationType = 'multiple',
 	usePaginationLimit,
-	meta = {
-		currentPage: 1,
-		lastPage: 20,
-		itemPerPage: 5,
-	},
+	lastPage,
+	setPageNumber,
+	setPagination,
+	setItemPerPage,
+
 	fetchFn,
 }: PaginationProps) => {
-	const [pageNumber, setPageNumber] = useState(meta.currentPage);
-	const [pagination, setPagination] = useState(1);
+	console.log(pagePerPagination);
 
-	useEffect(() => {
-		if (pageNumber > pagePerPagination * pagination)
-			setPagination((prev) => ++prev);
-
-		if (pageNumber <= pagePerPagination * (pagination - 1))
-			setPagination((prev) => --prev);
-
-		if (fetchFn) fetchFn(meta);
-	}, [pageNumber, pagination]);
+	const isSingle = paginationType === 'single';
 
 	const pageNumberClass =
 		'leading-20pxr py-3pxr px-9pxr flex items-center justify-center rounded-14pxr text-Grey_Darken-2 border border-transparent';
@@ -65,27 +63,21 @@ const Pagenation = ({
 	}
 
 	function goLastPage() {
-		setPageNumber(meta.lastPage);
-		setPagination(Math.ceil(meta.lastPage / pagePerPagination));
+		setPageNumber(lastPage);
+		setPagination(Math.ceil(lastPage / pagePerPagination));
 	}
 
 	function prevPage() {
-		const prevPage =
-			paginationType === 'single'
-				? pageNumber - 1
-				: pageNumber - pagePerPagination;
+		const prevPage = isSingle ? pageNumber - 1 : pageNumber - pagePerPagination;
 
 		if (prevPage > 0) {
 			setPageNumber(prevPage);
 		}
 	}
 	function nextPage() {
-		const nextPage =
-			paginationType === 'single'
-				? pageNumber + 1
-				: pageNumber + pagePerPagination;
+		const nextPage = isSingle ? pageNumber + 1 : pageNumber + pagePerPagination;
 
-		if (nextPage <= meta.lastPage) {
+		if (nextPage <= lastPage) {
 			setPageNumber(nextPage);
 		}
 	}
@@ -98,13 +90,11 @@ const Pagenation = ({
 	};
 
 	const isLeftButtonHidden =
-		(paginationType === 'multiple' && pagination === 1) ||
-		(paginationType === 'single' && pageNumber === 1);
+		(!isSingle && pagination === 1) || (isSingle && pageNumber === 1);
 
 	const isRightButtonHidden =
-		(paginationType === 'multiple' &&
-			pagination === Math.ceil(meta.lastPage / pagePerPagination)) ||
-		(paginationType === 'single' && pageNumber === meta.lastPage);
+		(!isSingle && pagination === Math.ceil(lastPage / pagePerPagination)) ||
+		(isSingle && pageNumber === lastPage);
 
 	return (
 		<div
@@ -135,7 +125,7 @@ const Pagenation = ({
 				</button>
 			</div>
 			<div className='flex gap-8pxr'>
-				{paginationType === 'multiple' ? (
+				{!isSingle ? (
 					Array.from({ length: pagePerPagination }, (_, index) => {
 						const pageIndex = (pagination - 1) * pagePerPagination + index + 1;
 						const numberLength = (pagination * pagePerPagination).toString().length;
@@ -163,7 +153,7 @@ const Pagenation = ({
 							{pageNumber}
 						</div>
 						<div className={[pageNumberClass].join(' ')}>/</div>
-						<div className={[pageNumberClass].join(' ')}>{meta.lastPage}</div>
+						<div className={[pageNumberClass].join(' ')}>{lastPage}</div>
 					</>
 				)}
 			</div>
@@ -192,18 +182,22 @@ const Pagenation = ({
 			{usePaginationLimit && (
 				<div className='absolute right-10pxr top-0 w-150pxr'>
 					<SSelect
+						defaultValue={[{ label: '5개씩 보기', value: 5 }]}
 						classname='w-full'
 						options={[
+							{ label: '5개씩 보기', value: 5 },
 							{ label: '10개씩 보기', value: 10 },
 							{ label: '20개씩 보기', value: 20 },
 							{ label: '30개씩 보기', value: 30 },
 							{ label: '40개씩 보기', value: 40 },
 						]}
 						handleChange={(value) => {
+							setItemPerPage(Number(value[0].value));
+
 							if (fetchFn) {
 								const newMeta = {
 									currentPage: pageNumber,
-									lastPage: meta.lastPage,
+									lastPage: lastPage,
 									itemPerPage: Number(value[0].value),
 								};
 
@@ -217,4 +211,4 @@ const Pagenation = ({
 	);
 };
 
-export default Pagenation;
+export default Pagination;

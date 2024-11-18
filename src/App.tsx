@@ -145,14 +145,11 @@ function App() {
 				</div>
 				<div className='flex w-800pxr flex-col gap-12pxr p-16pxr'>
 					<STable
-						tableClass='h-300pxr'
+						tableClass='h-264pxr'
 						resizable
 						stickyHeader
 						usePagination
-						fetchFn={async () => {
-							console.log(1);
-						}}
-						scrollHandle={() => console.log(1)}
+						useTotalData
 						usePaginationLimit
 					/>
 				</div>
@@ -162,8 +159,18 @@ function App() {
 						resizable
 						stickyHeader
 						usePagination
-						paginationType='single'
-						scrollHandle={() => console.log(1)}
+						usePaginationLimit
+						fetchFn={async () => console.log('fetch')}
+						scrollHandle={() => console.log('scroll')}
+					/>
+				</div>
+				<div className='flex w-800pxr flex-col gap-12pxr p-16pxr'>
+					<STable
+						tableClass='h-300pxr'
+						resizable
+						stickyHeader
+						usePagination
+						pagePerPagination={1}
 					/>
 				</div>
 				<div className='flex flex-col gap-12pxr p-16pxr'>
