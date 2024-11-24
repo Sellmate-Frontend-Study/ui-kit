@@ -47,8 +47,6 @@ const Pagination = ({
 
 	fetchFn,
 }: PaginationProps) => {
-	console.log(pagePerPagination);
-
 	const isSingle = paginationType === 'single';
 
 	const pageNumberClass =

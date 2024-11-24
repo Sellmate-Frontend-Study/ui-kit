@@ -426,8 +426,6 @@ const STable = ({
 			setTableRow(tableData.slice(startIndex, endIndex));
 			setLastPage(lastPage);
 			setPagePerOnce((prev) => {
-				console.log(prev > lastPage ? lastPage : prev);
-
 				return prev > lastPage ? lastPage : prev;
 			});
 		}

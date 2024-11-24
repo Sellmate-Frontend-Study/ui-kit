@@ -128,7 +128,35 @@ function App() {
 						options={[
 							{ label: '10개씩 보기', value: 10 },
 							{ label: '20개씩 보기', value: 20 },
-							{ label: '30개씩 보기', value: 30 },
+							{ label: '30개씩 보기', value: 30, disabled: true },
+							{ label: '40개씩 보기', value: 40 },
+							{ label: '50개씩 보기', value: 50 },
+							{ label: '60개씩 보기', value: 60 },
+							{ label: '70개씩 보기', value: 70 },
+							{ label: '80개씩 보기', value: 80 },
+						]}
+						useMultiple
+					></SSelect>
+					<SSelect
+						classname='w-200pxr'
+						options={[
+							{ label: '10개씩 보기', value: 10 },
+							{ label: '20개씩 보기', value: 20 },
+							{ label: '30개씩 보기', value: 30, disabled: true },
+							{ label: '40개씩 보기', value: 40 },
+							{ label: '50개씩 보기', value: 50 },
+							{ label: '60개씩 보기', value: 60 },
+							{ label: '70개씩 보기', value: 70 },
+							{ label: '80개씩 보기', value: 80 },
+						]}
+						useCheck
+					></SSelect>
+					<SSelect
+						classname='w-200pxr'
+						options={[
+							{ label: '10개씩 보기', value: 10 },
+							{ label: '20개씩 보기', value: 20 },
+							{ label: '30개씩 보기', value: 30, disabled: true },
 							{ label: '40개씩 보기', value: 40 },
 						]}
 					></SSelect>

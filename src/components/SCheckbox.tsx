@@ -39,13 +39,16 @@ export interface CheckboxProps {
 	 * Click handler
 	 */
 	onChange?: (arg: Checked) => void;
+	useIndependently?: boolean;
 }
 const SCheckbox = ({
 	label,
+	className,
 	disabled = false,
 	checked,
 	value,
 	onChange,
+	useIndependently = false,
 }: CheckboxProps) => {
 	const checkType = useCallback(
 		(checkValue: Checked) =>
@@ -109,7 +112,7 @@ const SCheckbox = ({
 			<input
 				type='checkbox'
 				checked={!!internalChecked}
-				disabled={disabled}
+				disabled={disabled || useIndependently}
 				className='hidden'
 				onChange={handleCheckboxChange}
 			/>
@@ -121,6 +124,7 @@ const SCheckbox = ({
 					isCheckedInIcon
 						? 'bg-Blue_C_Default before:border-Blue_C_Default'
 						: 'bg-white before:border-Grey_Default hover:bg-Blue_B_Lighten-5 hover:before:border hover:before:border-Blue_C_Default',
+					className,
 				].join(' ')}
 				aria-disabled={disabled}
 			>

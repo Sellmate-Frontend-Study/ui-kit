@@ -1,14 +1,16 @@
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Dropdown12 } from '../assets/DropdownIcon';
 import { createPortal } from 'react-dom';
 import SelectOptions, { SelectOptionProps } from './SelectOptions';
 
 export interface SelectProps {
 	defaultValue?: SelectOptionProps[];
-	options: { label: string; value: string | number }[];
+	options: SelectOptionProps[];
 	classname?: string;
 	placeholder?: string;
 	disabled?: boolean;
+	useMultiple?: boolean;
+	useCheck?: boolean;
 	handleChange?: (item: SelectOptionProps[]) => void;
 }
 
@@ -18,51 +20,34 @@ const SSelect = ({
 	classname,
 	placeholder = '선택',
 	disabled = false,
+	useMultiple = false,
+	useCheck = false,
 	handleChange,
 }: SelectProps) => {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const [value, setValue] = useState<SelectOptionProps[]>(defaultValue || []);
 	const selectRef = useRef<HTMLButtonElement>(null);
-	const id = useId();
-
-	const handleClickOutSide = useCallback((e: MouseEvent) => {
-		if (selectRef.current && !selectRef.current.contains(e.target as Node)) {
-			setIsDropdownOpen(false);
-		}
-	}, []);
 
 	useEffect(() => {
-		if (isDropdownOpen) {
-			document.addEventListener('mousedown', handleClickOutSide);
-		} else {
-			document.removeEventListener('mousedown', handleClickOutSide);
-		}
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutSide);
-		};
-	}, [isDropdownOpen, handleClickOutSide]);
-
-	const handleClick = (arg?: SelectOptionProps) => {
-		setIsDropdownOpen(false);
-		console.log(arg);
-
-		if (arg) setValue([arg]);
-		if (handleChange && arg) handleChange([arg]);
-	};
+		if (handleChange) handleChange(value);
+	}, [value, handleChange]);
 
 	return (
 		<>
 			<button
-				id={`s-select--${id}`}
 				ref={selectRef}
 				className={[
-					`s-select relative inline-block cursor-pointer text-ellipsis border border-Grey_Lighten-1 py-4pxr pl-12pxr pr-20pxr text-start hover:bg-Grey_Lighten-5 disabled:cursor-not-allowed disabled:border-Grey_Lighten-2 disabled:bg-Grey_Lighten-4 disabled:text-Grey_Default`,
+					`s-select relative inline-block cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap border border-Grey_Lighten-1 py-4pxr pl-12pxr pr-20pxr text-start hover:bg-Grey_Lighten-5 disabled:cursor-not-allowed disabled:border-Grey_Lighten-2 disabled:bg-Grey_Lighten-4 disabled:text-Grey_Default`,
 					classname,
 				].join(' ')}
 				onClick={() => setIsDropdownOpen((previousStatus) => !previousStatus)}
 				disabled={disabled}
 			>
-				{!value.length ? placeholder : value.map((item) => item.label).join(', ')}
+				{!value.length
+					? placeholder
+					: value.length === options.length
+						? '전체'
+						: value.map((item) => item.value).join(', ')}
 				<Dropdown12
 					className={`absolute right-8pxr top-8pxr ${isDropdownOpen && 'rotate-180'}`}
 					style={{ transition: 'transform 0.3s' }}
@@ -72,9 +57,13 @@ const SSelect = ({
 				createPortal(
 					<SelectOptions
 						isOpen={isDropdownOpen}
-						parentId={id}
+						parentRef={selectRef}
 						options={options}
-						onClick={handleClick}
+						value={value}
+						setValue={setValue}
+						setIsDropdownOpen={setIsDropdownOpen}
+						useMultiple={useCheck ? true : useMultiple}
+						useCheck={useCheck}
 					/>,
 					document.body
 				)}

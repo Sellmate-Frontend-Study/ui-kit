@@ -1,4 +1,13 @@
-import { useEffect, useState } from 'react';
+import {
+	Dispatch,
+	RefObject,
+	SetStateAction,
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+} from 'react';
+import SCheckbox from './SCheckbox';
 
 const initParentDOMRect = {
 	height: 0,
@@ -13,33 +22,84 @@ const initParentDOMRect = {
 export interface SelectOptionProps {
 	label: string;
 	value: number | string;
+	disabled?: boolean;
 }
 
 export interface SelectOptionsProps {
 	isOpen: boolean;
-	parentId: string;
+	parentRef: RefObject<HTMLButtonElement>;
 	options: SelectOptionProps[];
-	onClick: (arg: SelectOptionProps) => void;
+	useMultiple: boolean;
+	useCheck: boolean;
+	value: SelectOptionProps[];
+	setValue: Dispatch<SetStateAction<SelectOptionProps[]>>;
+	setIsDropdownOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const SelectOptions = ({
 	isOpen,
-	parentId = '',
+	parentRef,
 	options = [],
-	onClick,
+	useMultiple,
+	useCheck,
+	value,
+	setValue,
+	setIsDropdownOpen,
 }: SelectOptionsProps) => {
-	const [position, setPosition] =
-		useState<Omit<DOMRect, 'toJSON' | 'right'>>(initParentDOMRect);
+	const selectDropdownRef = useRef<HTMLUListElement>(null);
+
+	function handleClick(arg: SelectOptionProps) {
+		if (useMultiple) {
+			const isExist = value.includes(arg);
+
+			if (isExist) {
+				setValue((prev) => prev.filter((item) => item !== arg));
+			} else {
+				setValue((prev) => [...prev, arg]);
+			}
+		} else {
+			setValue([arg]);
+			setIsDropdownOpen(false);
+		}
+	}
+
+	const handleClickOutSide = useCallback(
+		(e: MouseEvent) => {
+			if (
+				parentRef.current &&
+				!parentRef.current.contains(e.target as Node) &&
+				selectDropdownRef.current &&
+				!selectDropdownRef.current.contains(e.target as Node)
+			)
+				setIsDropdownOpen(false);
+		},
+		[parentRef, setIsDropdownOpen]
+	);
+
+	function toggleTotal() {
+		if (value.length === 0) setValue(options);
+		else setValue([]);
+	}
+
+	const position = useMemo(
+		() =>
+			parentRef.current
+				? parentRef.current.getBoundingClientRect()
+				: initParentDOMRect,
+		[parentRef]
+	);
 
 	useEffect(() => {
-		const parent = document.getElementById(`s-select--${parentId}`) || null;
+		document.addEventListener('mousedown', handleClickOutSide);
 
-		if (parent) setPosition(parent.getBoundingClientRect());
-	}, [parentId]);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutSide);
+		};
+	}, [handleClickOutSide]);
 
 	return (
 		<ul
-			id={`s-select__options--${parentId}`}
+			ref={selectDropdownRef}
 			className={[
 				's-select__options rounded-2pxr bg-white  shadow-dropdownOptions',
 				isOpen ? 'opacity-1' : 'opacity-0',
@@ -52,14 +112,42 @@ const SelectOptions = ({
 				transition: 'opacity 0.4s',
 			}}
 		>
+			{useCheck && (
+				<li
+					className={[
+						'group/select-dropdown-item flex w-full items-center gap-8pxr px-12pxr py-4pxr text-Grey_Darken-4 hover:bg-Blue_C_Default hover:text-white',
+					].join(' ')}
+					onMouseDown={toggleTotal}
+				>
+					<SCheckbox
+						className={`${value.length === options.length && 'group-hover/select-dropdown-item:before:border-white'}`}
+						checked={
+							!value.length ? false : value.length === options.length ? true : null
+						}
+						useIndependently
+					/>
+					<div>전체</div>
+				</li>
+			)}
 			{options.map((option) => (
 				<li
 					key={option.value}
 					className={[
-						'px-12pxr py-4pxr text-Grey_Darken-4 hover:bg-Blue_C_Default hover:text-white aria-disabled:bg-white aria-disabled:text-Grey_Lighten-1',
+						'group/select-dropdown-item flex w-full items-center gap-8pxr px-12pxr py-4pxr hover:bg-Blue_C_Default hover:text-white aria-disabled:pointer-events-none aria-disabled:bg-white aria-disabled:text-Grey_Lighten-1',
+						value.includes(option) && !useCheck
+							? 'font-bold text-Blue_C_Default'
+							: 'text-Grey_Darken-4',
 					].join(' ')}
-					onMouseDown={() => onClick(option)}
+					onMouseDown={() => handleClick(option)}
+					aria-disabled={option.disabled}
 				>
+					{useCheck && (
+						<SCheckbox
+							className={`pointer-events-none ${value.includes(option) && 'group-hover/select-dropdown-item:before:border-white'}`}
+							checked={value.includes(option)}
+							useIndependently
+						/>
+					)}
 					{typeof option.label === 'string' ? (
 						<div>{option.label}</div>
 					) : (
