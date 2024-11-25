@@ -1,5 +1,6 @@
 import { routes } from './routes/router';
 import { FaCircle, FaAngleRight } from 'react-icons/fa6';
+import SSelect from './components/SSelect';
 
 function App() {
 	return (
@@ -22,6 +23,17 @@ function App() {
 					</li>
 				))}
 			</ul>
+			<div className='flex w-800pxr flex-col gap-12pxr p-16pxr'>
+				<SSelect
+					className='w-200pxr'
+					options={[
+						{ label: '10개씩 보기', value: 10 },
+						{ label: '20개씩 보기', value: 20 },
+						{ label: '30개씩 보기', value: 30 },
+						{ label: '40개씩 보기', value: 40 },
+					]}
+				></SSelect>
+			</div>
 		</section>
 	);
 }
