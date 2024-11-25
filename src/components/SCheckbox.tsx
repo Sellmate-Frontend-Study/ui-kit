@@ -39,7 +39,7 @@ export interface CheckboxProps {
 	 * Click handler
 	 */
 	onChange?: (arg: Checked) => void;
-	useIndependently?: boolean;
+	labelClass?: string;
 }
 const SCheckbox = ({
 	label,
@@ -48,7 +48,7 @@ const SCheckbox = ({
 	checked,
 	value,
 	onChange,
-	useIndependently = false,
+	labelClass,
 }: CheckboxProps) => {
 	const checkType = useCallback(
 		(checkValue: Checked) =>
@@ -107,12 +107,13 @@ const SCheckbox = ({
 			className={[
 				's-checkbox inline-flex items-center',
 				disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+				labelClass,
 			].join(' ')}
 		>
 			<input
 				type='checkbox'
 				checked={!!internalChecked}
-				disabled={disabled || useIndependently}
+				disabled={disabled}
 				className='hidden'
 				onChange={handleCheckboxChange}
 			/>

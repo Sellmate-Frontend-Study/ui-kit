@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Dropdown12 } from '../assets/DropdownIcon';
 import { SelectOptionProps } from './select/SelectOptions';
 import SelectDropdownContainer from './select/SelectDropdownContainer';
-import SelectItems from './select/SelectItems';
+import SelectCheckboxItems from './select/SelectCheckboxItems';
 
 export interface SelectProps {
 	defaultValue?: SelectOptionProps[];
@@ -15,13 +15,12 @@ export interface SelectProps {
 	handleChange?: (item: SelectOptionProps[]) => void;
 }
 
-const SSelect = ({
+const SSelectCheckbox = ({
 	defaultValue,
 	options,
 	classname,
 	placeholder = '선택',
 	disabled = false,
-	useMultiple = false,
 	handleChange,
 }: SelectProps) => {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -53,22 +52,19 @@ const SSelect = ({
 					style={{ transition: 'transform 0.3s' }}
 				/>
 			</button>
-
 			<SelectDropdownContainer
 				parentRef={selectRef}
 				isOpen={isDropdownOpen}
 				setIsOpen={setIsDropdownOpen}
 			>
-				<SelectItems
+				<SelectCheckboxItems
 					options={options}
-					useMultiple={useMultiple}
 					value={value}
 					setValue={setValue}
-					setIsDropdownOpen={setIsDropdownOpen}
 				/>
 			</SelectDropdownContainer>
 		</>
 	);
 };
 
-export default SSelect;
+export default SSelectCheckbox;

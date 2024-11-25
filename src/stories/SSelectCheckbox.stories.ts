@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import SSelect from '../components/SSelect';
+import SSelectCheckbox from '../components/SSelectCheckbox';
 
 const meta = {
-	title: 'SSelect',
-	component: SSelect,
+	title: 'SSelectCheckbox',
+	component: SSelectCheckbox,
 	parameters: {
 		layout: 'centered',
 	},
@@ -12,7 +12,7 @@ const meta = {
 		disabled: { control: 'boolean' },
 	},
 	// Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
-} satisfies Meta<typeof SSelect>;
+} satisfies Meta<typeof SSelectCheckbox>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -31,6 +31,7 @@ const options = [
 	{ label: 'option 11', value: 11 },
 	{ label: 'option 12', value: 12 },
 ];
+
 const optionsWithDisable = [
 	{ label: 'option 1', value: 1 },
 	{ label: 'option 2', value: 2 },
@@ -60,25 +61,9 @@ export const DisabledSelect: Story = {
 	},
 };
 
-export const MultipleSelect: Story = {
-	args: {
-		classname: 'w-150pxr',
-		options,
-		useMultiple: true,
-	},
-};
-
 export const SelectWithDisableItem: Story = {
 	args: {
 		classname: 'w-150pxr',
 		options: optionsWithDisable,
-	},
-};
-
-export const MultipleSelectWithDisableItem: Story = {
-	args: {
-		classname: 'w-150pxr',
-		options: optionsWithDisable,
-		useMultiple: true,
 	},
 };

@@ -15,6 +15,7 @@ import SCaution from './components/SCaution';
 import SInput from './components/SInput';
 import STable from './components/STable';
 import SSelect from './components/SSelect';
+import SSelectCheckbox from './components/SSelectCheckbox';
 
 function App() {
 	const [checked, setChecked] = useState(false);
@@ -123,6 +124,19 @@ function App() {
 		<>
 			<main>
 				<div className='flex w-800pxr flex-col gap-12pxr p-16pxr'>
+					<SSelectCheckbox
+						classname='w-200pxr'
+						options={[
+							{ label: '10개씩 보기', value: 10 },
+							{ label: '20개씩 보기', value: 20 },
+							{ label: '30개씩 보기', value: 30, disabled: true },
+							{ label: '40개씩 보기', value: 40 },
+							{ label: '50개씩 보기', value: 50 },
+							{ label: '60개씩 보기', value: 60 },
+							{ label: '70개씩 보기', value: 70 },
+							{ label: '80개씩 보기', value: 80 },
+						]}
+					></SSelectCheckbox>
 					<SSelect
 						classname='w-200pxr'
 						options={[
@@ -137,7 +151,7 @@ function App() {
 						]}
 						useMultiple
 					></SSelect>
-					<SSelect
+					{/* <SSelect
 						classname='w-200pxr'
 						options={[
 							{ label: '10개씩 보기', value: 10 },
@@ -169,7 +183,7 @@ function App() {
 							{ label: '40개씩 보기', value: 40 },
 						]}
 						disabled
-					></SSelect>
+					></SSelect> */}
 				</div>
 				<div className='flex w-800pxr flex-col gap-12pxr p-16pxr'>
 					<STable

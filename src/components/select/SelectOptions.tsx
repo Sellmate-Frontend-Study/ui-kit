@@ -7,7 +7,7 @@ import {
 	useMemo,
 	useRef,
 } from 'react';
-import SCheckbox from './SCheckbox';
+import SCheckbox from '../SCheckbox';
 
 const initParentDOMRect = {
 	height: 0,
