@@ -21,7 +21,7 @@ export interface SelectOptionsProps {
 	options: OptionProps[];
 	value: OptionProps[];
 	isAllSelected: boolean;
-	onCheckboxOptionChange: (arg: OptionProps) => void;
+	onOptionChange: (selectedOption: OptionProps) => void;
 	selectOptionsRef: React.RefObject<HTMLUListElement>;
 }
 
@@ -31,22 +31,28 @@ const SelectOptions = forwardRef(
 		options,
 		value,
 		isAllSelected,
-		onCheckboxOptionChange,
+		onOptionChange,
 		selectOptionsRef,
 	}: SelectOptionsProps) => {
 		const [position, setPosition] =
 			useState<Omit<DOMRect, 'toJSON' | 'right'>>(initParentDOMRect);
+		const SCheckBoxSelectOptionsClasses =
+			's-checkbox-select__options absolute rounded bg-white shadow-lg';
+		const SCheckBoxSelectOptionClasses =
+			'flex items-center gap-2 px-4 py-2 hover:bg-Grey_Lighten-5';
+
+		const checkedOption = (option: OptionProps) => {
+			if (option.value === options[0].value) {
+				return isAllSelected;
+			}
+			return value.some((item) => item.value === option.value);
+		};
 
 		useEffect(() => {
 			const parent = document.getElementById(`s-select--${parentId}`) || null;
 
 			if (parent) setPosition(parent.getBoundingClientRect());
 		}, [parentId]);
-
-		const SCheckBoxSelectOptionsClasses =
-			's-checkbox-select__options absolute rounded bg-white shadow-lg';
-		const SCheckBoxSelectOptionClasses =
-			'flex items-center gap-2 px-4 py-2 hover:bg-Grey_Lighten-5';
 
 		return (
 			<ul
@@ -67,12 +73,8 @@ const SelectOptions = forwardRef(
 						<SCheckbox
 							label={option.label}
 							value={String(option.value)}
-							checked={
-								option.value === 'all'
-									? isAllSelected
-									: value.some((item) => item.value === option.value)
-							}
-							onChange={() => onCheckboxOptionChange(option)}
+							checked={checkedOption(option)}
+							onChange={() => onOptionChange(option)}
 						/>
 					</li>
 				))}

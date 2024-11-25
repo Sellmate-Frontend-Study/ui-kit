@@ -6,6 +6,7 @@ const SelectCheckbox = () => {
 
 	const handleSelectChange = (selectedOptions) => {
 		setSelectedOptions(selectedOptions);
+		console.log(selectedOptions);
 	};
 
 	return (
@@ -16,10 +17,10 @@ const SelectCheckbox = () => {
 			<SCheckBoxSelect
 				className='w-200pxr'
 				options={[
-					{ label: '10개씩 보기', value: 10 },
-					{ label: '20개씩 보기', value: 20 },
-					{ label: '30개씩 보기', value: 30 },
-					{ label: '40개씩 보기', value: 40 },
+					{ label: '1aaaaaa', value: 1 },
+					{ label: '2aaaaaaaasa', value: 2 },
+					{ label: '3adaadsdadsd', value: 3 },
+					{ label: '4adasdasda', value: 4 },
 				]}
 				handleChange={handleSelectChange}
 			></SCheckBoxSelect>

@@ -25,6 +25,10 @@ const SCheckBoxSelect = ({
 	const isAll = { label: '전체', value: 'all' };
 	const id = useId();
 
+	const isAllSelected = value.length === options.length;
+	const SCheckBoxSelectClasses = `s-checkbox-select relative inline-block cursor-pointer overflow-hidden text-ellipsis text-ellipsis whitespace-nowrap border border-Grey_Lighten-1 py-4pxr pl-12pxr pr-20pxr text-start hover:bg-Grey_Lighten-5 disabled:cursor-not-allowed disabled:border-Grey_Lighten-2 disabled:bg-Grey_Lighten-4 disabled:text-Grey_Default`;
+	const DropdownIconClasses = `absolute right-8pxr top-8pxr ${isSelectOpen && 'rotate-180'}`;
+
 	const handleClickOutside = useCallback((e: MouseEvent) => {
 		if (
 			selectRef.current &&
@@ -47,31 +51,34 @@ const SCheckBoxSelect = ({
 		};
 	}, [isSelectOpen, handleClickOutside]);
 
-	const handleCheckBoxOptionChange = (selectedOption: OptionProps) => {
-		if (selectedOption.value === 'all') {
-			const isAllSelected = value.length === options.length;
-			const updatedValue = isAllSelected ? [] : [...options];
-			setValue(updatedValue);
-			handleChange?.(updatedValue);
+	const checkedAllOption = () => {
+		const newValue = isAllSelected ? [] : [...options];
+		setValue(newValue);
+		handleChange?.(newValue);
+	};
+
+	const checkedOption = (selectedOption: OptionProps) => {
+		const isIncluded = value.some((item) => item.value === selectedOption.value);
+		const newValue = isIncluded
+			? value.filter((item) => item.value !== selectedOption.value)
+			: [...value, selectedOption];
+		setValue(newValue);
+		handleChange?.(newValue);
+	};
+
+	const handleOptionChange = (selectedOption: OptionProps) => {
+		if (selectedOption.value === isAll.value) {
+			checkedAllOption();
 		} else {
-			const isSelected = value.some((item) => item.value === selectedOption.value);
-			const updatedValue = isSelected
-				? value.filter((item) => item.value !== selectedOption.value)
-				: [...value, selectedOption];
-			setValue(updatedValue);
-			handleChange?.(updatedValue);
+			checkedOption(selectedOption);
 		}
 	};
 
 	const getSelectLabel = () => {
 		if (isAllSelected) return isAll.label;
 		if (value.length === 0) return placeholder;
-		return value.map((item) => item.label).join(', ');
+		return value.map((option) => option.label).join(', ');
 	};
-
-	const isAllSelected = value.length === options.length && options.length > 0;
-	const SCheckBoxSelectClasses = `s-checkbox-select relative inline-block cursor-pointer overflow-hidden text-ellipsis text-ellipsis whitespace-nowrap border border-Grey_Lighten-1 py-4pxr pl-12pxr pr-20pxr text-start hover:bg-Grey_Lighten-5 disabled:cursor-not-allowed disabled:border-Grey_Lighten-2 disabled:bg-Grey_Lighten-4 disabled:text-Grey_Default`;
-	const DropdownIconClasses = `absolute right-8pxr top-8pxr ${isSelectOpen && 'rotate-180'}`;
 
 	return (
 		<>
@@ -92,7 +99,7 @@ const SCheckBoxSelect = ({
 						options={[isAll, ...options]}
 						value={value}
 						isAllSelected={isAllSelected}
-						onCheckboxOptionChange={handleCheckBoxOptionChange}
+						onOptionChange={handleOptionChange}
 						selectOptionsRef={selectOptionsRef}
 					/>,
 					document.body
