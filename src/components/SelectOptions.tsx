@@ -21,19 +21,19 @@ export interface SelectOptionsProps {
 	options: OptionProps[];
 	value: OptionProps[];
 	isAllSelected: boolean;
-	onCheckboxChange: (arg: OptionProps) => void;
-	dropdownRef: React.RefObject<HTMLUListElement>;
+	onCheckboxOptionChange: (arg: OptionProps) => void;
+	selectOptionsRef: React.RefObject<HTMLUListElement>;
 }
 
-const SelectOptions = forwardRef<HTMLUListElement, SelectOptionsProps>(
+const SelectOptions = forwardRef(
 	({
 		parentId,
 		options,
 		value,
 		isAllSelected,
-		onCheckboxChange,
-		dropdownRef,
-	}) => {
+		onCheckboxOptionChange,
+		selectOptionsRef,
+	}: SelectOptionsProps) => {
 		const [position, setPosition] =
 			useState<Omit<DOMRect, 'toJSON' | 'right'>>(initParentDOMRect);
 
@@ -43,22 +43,26 @@ const SelectOptions = forwardRef<HTMLUListElement, SelectOptionsProps>(
 			if (parent) setPosition(parent.getBoundingClientRect());
 		}, [parentId]);
 
+		const SCheckBoxSelectOptionsClasses =
+			's-checkbox-select__options absolute rounded bg-white shadow-lg';
+		const SCheckBoxSelectOptionClasses =
+			'flex items-center gap-2 px-4 py-2 hover:bg-Grey_Lighten-5';
+
 		return (
 			<ul
 				id={`s-select__options--${parentId}`}
-				ref={dropdownRef}
-				className='s-select__options absolute z-10 rounded bg-white shadow-lg'
+				ref={selectOptionsRef}
+				className={SCheckBoxSelectOptionsClasses}
 				style={{
 					top: position.top + position.height + 4 + window.scrollY,
 					left: position.left + window.scrollX,
 					width: position.width,
-					transition: 'opacity 0.4s',
 				}}
 			>
 				{options.map((option) => (
 					<li
 						key={option.value}
-						className='flex items-center gap-2 px-4 py-2 hover:bg-gray-100'
+						className={SCheckBoxSelectOptionClasses}
 					>
 						<SCheckbox
 							label={option.label}
@@ -68,7 +72,7 @@ const SelectOptions = forwardRef<HTMLUListElement, SelectOptionsProps>(
 									? isAllSelected
 									: value.some((item) => item.value === option.value)
 							}
-							onChange={() => onCheckboxChange(option)}
+							onChange={() => onCheckboxOptionChange(option)}
 						/>
 					</li>
 				))}
@@ -76,7 +80,5 @@ const SelectOptions = forwardRef<HTMLUListElement, SelectOptionsProps>(
 		);
 	}
 );
-
-SelectOptions.displayName = 'SelectOptions';
 
 export default SelectOptions;

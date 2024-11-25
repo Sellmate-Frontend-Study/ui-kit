@@ -3,7 +3,7 @@ import { Dropdown12 } from '../assets/DropdownIcon';
 import { createPortal } from 'react-dom';
 import SelectOptions, { OptionProps } from './SelectOptions';
 
-export interface SelectProps {
+export interface SCheckBoxSelectProps {
 	options: { label: string; value: string | number }[];
 	className?: string;
 	placeholder?: string;
@@ -11,25 +11,26 @@ export interface SelectProps {
 	handleChange?: (items: OptionProps[]) => void;
 }
 
-const SSelect = ({
+const SCheckBoxSelect = ({
 	options,
 	className,
 	placeholder = '선택',
 	disabled = false,
 	handleChange,
-}: SelectProps) => {
+}: SCheckBoxSelectProps) => {
 	const [isSelectOpen, setIsSelectOpen] = useState(false);
 	const [value, setValue] = useState<OptionProps[]>([]);
 	const selectRef = useRef<HTMLButtonElement>(null);
-	const dropdownRef = useRef<HTMLUListElement>(null);
+	const selectOptionsRef = useRef<HTMLUListElement>(null);
+	const isAll = { label: '전체', value: 'all' };
 	const id = useId();
 
 	const handleClickOutside = useCallback((e: MouseEvent) => {
 		if (
 			selectRef.current &&
 			!selectRef.current.contains(e.target as Node) &&
-			dropdownRef.current &&
-			!dropdownRef.current.contains(e.target as Node)
+			selectOptionsRef.current &&
+			!selectOptionsRef.current.contains(e.target as Node)
 		) {
 			setIsSelectOpen(false);
 		}
@@ -46,7 +47,7 @@ const SSelect = ({
 		};
 	}, [isSelectOpen, handleClickOutside]);
 
-	const handleCheckboxChange = (selectedOption: OptionProps) => {
+	const handleCheckBoxOptionChange = (selectedOption: OptionProps) => {
 		if (selectedOption.value === 'all') {
 			const isAllSelected = value.length === options.length;
 			const updatedValue = isAllSelected ? [] : [...options];
@@ -62,37 +63,37 @@ const SSelect = ({
 		}
 	};
 
+	const getSelectLabel = () => {
+		if (isAllSelected) return isAll.label;
+		if (value.length === 0) return placeholder;
+		return value.map((item) => item.label).join(', ');
+	};
+
 	const isAllSelected = value.length === options.length && options.length > 0;
+	const SCheckBoxSelectClasses = `s-checkbox-select relative inline-block cursor-pointer overflow-hidden text-ellipsis text-ellipsis whitespace-nowrap border border-Grey_Lighten-1 py-4pxr pl-12pxr pr-20pxr text-start hover:bg-Grey_Lighten-5 disabled:cursor-not-allowed disabled:border-Grey_Lighten-2 disabled:bg-Grey_Lighten-4 disabled:text-Grey_Default`;
+	const DropdownIconClasses = `absolute right-8pxr top-8pxr ${isSelectOpen && 'rotate-180'}`;
 
 	return (
 		<>
 			<button
 				id={`s-select--${id}`}
 				ref={selectRef}
-				className={[
-					`s-select relative inline-block cursor-pointer text-ellipsis border border-Grey_Lighten-1 py-4pxr pl-12pxr pr-20pxr text-start hover:bg-Grey_Lighten-5 disabled:cursor-not-allowed disabled:border-Grey_Lighten-2 disabled:bg-Grey_Lighten-4 disabled:text-Grey_Default`,
-					className,
-				].join(' ')}
+				className={[SCheckBoxSelectClasses, className].join(' ')}
 				onClick={() => setIsSelectOpen(!isSelectOpen)}
 				disabled={disabled}
 			>
-				{value.length === 0
-					? placeholder
-					: value.map((item) => item.label).join(', ')}
-				<Dropdown12
-					className={`absolute right-8pxr top-8pxr ${isSelectOpen && 'rotate-180'}`}
-					style={{ transition: 'transform 0.3s' }}
-				/>
+				{getSelectLabel()}
+				<Dropdown12 className={DropdownIconClasses} />
 			</button>
 			{isSelectOpen &&
 				createPortal(
 					<SelectOptions
 						parentId={id}
-						options={[{ label: '전체', value: 'all' }, ...options]}
+						options={[isAll, ...options]}
 						value={value}
 						isAllSelected={isAllSelected}
-						onCheckboxChange={handleCheckboxChange}
-						dropdownRef={dropdownRef}
+						onCheckboxOptionChange={handleCheckBoxOptionChange}
+						selectOptionsRef={selectOptionsRef}
 					/>,
 					document.body
 				)}
@@ -100,4 +101,4 @@ const SSelect = ({
 	);
 };
 
-export default SSelect;
+export default SCheckBoxSelect;
