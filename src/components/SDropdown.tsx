@@ -1,10 +1,9 @@
 import { createPortal } from 'react-dom';
-import { useId, useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import colors from '../css/colors.ts';
 import { Dropdown12 } from '../assets/DropdownIcon.tsx';
-import DropdownOptions, {
-	type DropdownOptionProps,
-} from './DropdownOptions.tsx';
+import DropdownOptions from './DropdownOptions.tsx';
+import { Option } from './DropdownItem.tsx';
 
 export interface SDropdownProps {
 	/**
@@ -23,13 +22,13 @@ export interface SDropdownProps {
 	/**
 	 * Click handler
 	 */
-	onClick: (arg: DropdownOptionProps) => void;
+	onClick: (arg: Option) => void;
 	/**
 	 * Dropdown options
 	 * @description Options can using HTML code
 	 * @example [{ label: '<span style="color: red">label</span>', value: 'label' }]
 	 */
-	options: DropdownOptionProps[];
+	options: Option[];
 	/**
 	 * Dropdown outline
 	 * @description Outline 'true' means changing the color of the text to the color you specified.
@@ -82,27 +81,9 @@ const SDropdown = ({
 		: 'hover:before:bg-black hover:before:opacity-10';
 
 	const [isOpen, setIsOpen] = useState(false);
-	const id = useId();
 	const dropdownRef = useRef<HTMLButtonElement>(null);
 
-	const handleClickOutSide = useCallback((e: MouseEvent) => {
-		if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-			setIsOpen(false);
-		}
-	}, []);
-
-	useEffect(() => {
-		if (isOpen) {
-			document.addEventListener('mousedown', handleClickOutSide);
-		} else {
-			document.removeEventListener('mousedown', handleClickOutSide);
-		}
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutSide);
-		};
-	}, [isOpen, handleClickOutSide]);
-
-	const handleClick = (arg?: DropdownOptionProps) => {
+	const handleClick = (arg?: Option) => {
 		setIsOpen((prev) => !prev);
 		if (arg) onClick(arg);
 	};
@@ -110,7 +91,6 @@ const SDropdown = ({
 	return (
 		<>
 			<button
-				id={`s-dropdown--${id}`}
 				ref={dropdownRef}
 				disabled={disabled}
 				onClick={() => setIsOpen((prev) => !prev)}
@@ -149,8 +129,10 @@ const SDropdown = ({
 				createPortal(
 					<DropdownOptions
 						onClick={handleClick}
-						parentId={id}
 						options={options}
+      parentRef={dropdownRef}
+      open={isOpen}
+      setOpen={setIsOpen}
 					/>,
 					document.body
 				)}
