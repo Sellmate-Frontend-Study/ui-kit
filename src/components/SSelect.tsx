@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Dropdown12 } from '../assets/DropdownIcon';
 import { SelectOptionProps } from './select/SelectOptions';
-import SelectDropdownContainer from './select/SelectDropdownContainer';
 import SelectItems from './select/SelectItems';
+import SelectPortalLayout from './select/SelectPortalLayout';
 
 export interface SelectProps {
 	defaultValue?: SelectOptionProps[];
@@ -54,7 +54,7 @@ const SSelect = ({
 				/>
 			</button>
 
-			<SelectDropdownContainer
+			<SelectPortalLayout
 				parentRef={selectRef}
 				isOpen={isDropdownOpen}
 				setIsOpen={setIsDropdownOpen}
@@ -66,7 +66,7 @@ const SSelect = ({
 					setValue={setValue}
 					setIsDropdownOpen={setIsDropdownOpen}
 				/>
-			</SelectDropdownContainer>
+			</SelectPortalLayout>
 		</>
 	);
 };

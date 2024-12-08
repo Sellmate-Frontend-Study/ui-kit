@@ -22,12 +22,12 @@ type Props = {
 	setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function SelectDropdownContainer({
+const SelectPortalLayout = ({
 	parentRef,
 	children,
 	isOpen,
 	setIsOpen,
-}: Props) {
+}: Props) => {
 	const [position, setPosition] = useState(initParentDOMRect);
 	const selectDropdownRef = useRef<HTMLUListElement>(null);
 
@@ -95,4 +95,6 @@ export default function SelectDropdownContainer({
 			)}
 		</>
 	);
-}
+};
+
+export default SelectPortalLayout;
