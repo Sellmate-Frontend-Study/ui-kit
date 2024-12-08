@@ -4,12 +4,16 @@ import { SelectOptionProps } from './select/SelectOptions';
 import SelectDropdownContainer from './select/SelectDropdownContainer';
 import SelectGroupCheckboxItems from './select/SelectGroupCheckboxItems';
 
+export interface GroupProps {
+	groupName: string;
+	disabled?: boolean;
+	groupChecked?: boolean;
+	options: SelectOptionProps[];
+}
+
 export interface SelectGroupProps {
 	defaultValue?: SelectOptionProps[];
-	options: {
-		groupName: string;
-		options: SelectOptionProps[];
-	}[];
+	options: GroupProps[];
 	classname?: string;
 	placeholder?: string;
 	disabled?: boolean;
@@ -32,6 +36,44 @@ const SSelectGroupCheckbox = ({
 		if (handleChange) handleChange(value);
 	}, [value, handleChange]);
 
+	function getBtnLabel() {
+		if (!value.length) {
+			return placeholder;
+		}
+
+		const allOptions = options
+			.flatMap((group) => group.options)
+			.filter((option) => !option.disabled);
+
+		const allOptionsSelected = allOptions.every((option) =>
+			value.includes(option)
+		);
+		if (allOptionsSelected) {
+			return '전체';
+		}
+
+		const getGroupLabel = options.map((group) => {
+			if (group.disabled) {
+				return null;
+			}
+
+			const selectedOptions = group.options.filter(
+				(option) => !option.disabled && value.includes(option)
+			);
+
+			if (selectedOptions.length === group.options.length) {
+				return group.groupName;
+			} else if (selectedOptions.length > 0) {
+				return selectedOptions.map((option) => option.label).join(', ');
+			}
+			return null;
+		});
+
+		const finalText = getGroupLabel.filter(Boolean).join(', ');
+
+		return finalText || placeholder;
+	}
+
 	return (
 		<>
 			<button
@@ -46,7 +88,7 @@ const SSelectGroupCheckbox = ({
 				{/* group이 다 선택 -> 전체 선택
         group이 하나라도 선택 -> 옵션이 다 선택된 그룹은 그룹명, 아닌 그룹은 옵션명
         group이 다 선택된게 하나도 없다? -> 옵션 이름 */}
-				{!value.length ? placeholder : value.map((item) => item.label).join(', ')}
+				{getBtnLabel()}
 				<Dropdown12
 					className={`absolute right-8pxr top-8pxr ${isDropdownOpen && 'rotate-180'}`}
 					style={{ transition: 'transform 0.3s' }}

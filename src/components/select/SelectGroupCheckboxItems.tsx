@@ -1,12 +1,10 @@
 import { Dispatch, SetStateAction } from 'react';
 import SCheckbox from '../SCheckbox';
 import { SelectOptionProps } from './SelectItems';
+import { GroupProps } from '../SSelectGroupCheckbox';
 
 export interface SelectGroupCheckboxItemsProps {
-	options: {
-		groupName: string;
-		options: SelectOptionProps[];
-	}[];
+	options: GroupProps[];
 	value: SelectOptionProps[];
 	setValue: Dispatch<SetStateAction<SelectOptionProps[]>>;
 }
@@ -24,10 +22,9 @@ const SelectGroupCheckboxItems = ({
 		}
 	}
 
-	function handleGroupClick(group: {
-		groupName: string;
-		options: SelectOptionProps[];
-	}) {
+	function handleGroupClick(group: GroupProps) {
+		if (group.disabled) return;
+
 		const isGroupSelected = group.options.every((option) =>
 			value.includes(option)
 		);
@@ -45,14 +42,22 @@ const SelectGroupCheckboxItems = ({
 	return (
 		<ul>
 			{options.map((group) => (
-				<li key={group.groupName}>
-					<div className='group-name flex w-full items-center items-center gap-8pxr bg-Grey_Lighten-5 px-12pxr py-4pxr font-bold'>
-						<SCheckbox
-							label={group.groupName}
-							checked={group.options.every((option) => value.includes(option))}
-							onChange={() => handleGroupClick(group)}
-							labelClass='w-full'
-						/>
+				<li
+					key={group.groupName}
+					aria-disabled={group.disabled}
+				>
+					<div className='group-name flex w-full items-center items-center gap-8pxr bg-Grey_Lighten-5 px-12pxr py-4pxr font-bold aria-disabled:bg-white aria-disabled:text-Grey_Lighten-1'>
+						{group.groupChecked ? (
+							<SCheckbox
+								label={group.groupName}
+								checked={group.options.every((option) => value.includes(option))}
+								onChange={() => handleGroupClick(group)}
+								labelClass='w-full'
+								disabled={group.disabled}
+							/>
+						) : (
+							<span>{group.groupName}</span>
+						)}
 					</div>
 
 					<ul className='group-options'>
@@ -62,14 +67,14 @@ const SelectGroupCheckboxItems = ({
 								className={[
 									'group-options flex w-full items-center gap-8pxr px-12pxr py-4pxr pl-16pxr text-Grey_Darken-4 hover:bg-Blue_C_Default hover:text-white aria-disabled:pointer-events-none aria-disabled:bg-white aria-disabled:text-Grey_Lighten-1',
 								].join(' ')}
-								aria-disabled={option.disabled}
+								aria-disabled={group.disabled || option.disabled}
 							>
 								<SCheckbox
 									label={option.label}
 									checked={value.includes(option)}
 									labelClass='w-full'
 									onChange={() => handleClick(option)}
-									disabled={option.disabled}
+									aria-disabled={group.disabled || option.disabled}
 								/>
 							</li>
 						))}
