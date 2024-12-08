@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Dropdown12 } from '../assets/DropdownIcon';
 import { SelectOptionProps } from './select/SelectOptions';
-
-import SelectCheckboxItems from './select/SelectCheckboxItems';
 import SelectPortalLayout from './select/SelectPortalLayout';
+import SelectGroupCheckboxItems from './select/SelectGruopCheckboxItems';
 
 export interface SelectProps {
 	defaultValue?: SelectOptionProps[];
@@ -16,7 +15,7 @@ export interface SelectProps {
 	handleChange?: (item: SelectOptionProps[]) => void;
 }
 
-const SSelectCheckbox = ({
+const SSelectGroupCheckbox = ({
 	defaultValue,
 	options,
 	classname,
@@ -58,7 +57,7 @@ const SSelectCheckbox = ({
 				isOpen={isDropdownOpen}
 				setIsOpen={setIsDropdownOpen}
 			>
-				<SelectCheckboxItems
+				<SelectGroupCheckboxItems
 					options={options}
 					value={value}
 					setValue={setValue}
@@ -68,4 +67,4 @@ const SSelectCheckbox = ({
 	);
 };
 
-export default SSelectCheckbox;
+export default SSelectGroupCheckbox;

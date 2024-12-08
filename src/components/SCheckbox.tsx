@@ -9,7 +9,7 @@ import {
 import { Check12 } from '../assets/CheckIcon';
 import { Minus12 } from '../assets/MinusIcon';
 
-type Checked = null | boolean | (string | number)[];
+export type Checked = null | boolean | (string | number)[];
 export interface CheckboxProps {
 	/**
 	 * Checkbox disable
