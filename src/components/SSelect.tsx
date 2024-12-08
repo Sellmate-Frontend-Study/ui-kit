@@ -1,17 +1,32 @@
 import { useEffect, useRef, useState } from 'react';
 import { Dropdown12 } from '../assets/DropdownIcon';
-import { SelectOptionProps } from './select/SelectOptions';
 import SelectDropdownContainer from './select/SelectDropdownContainer';
 import SelectItems from './select/SelectItems';
+import SelectGroupCheckboxItems from './select/SelectGroupCheckboxItems';
+import SelectCheckboxItems from './select/SelectCheckboxItems';
+
+export interface SelectOptionProps {
+	label: string;
+	value: number | string;
+	disabled?: boolean;
+}
+
+export interface GroupProps {
+	groupName: string;
+	disabled?: boolean;
+	groupChecked?: boolean;
+	options: SelectOptionProps[];
+}
 
 export interface SelectProps {
 	defaultValue?: SelectOptionProps[];
-	options: SelectOptionProps[];
+	options: SelectOptionProps[] | GroupProps[];
 	classname?: string;
 	placeholder?: string;
 	disabled?: boolean;
-	useMultiple?: boolean;
-	useCheck?: boolean;
+	useMultiple?: boolean; //select 일때만
+	checkbox?: boolean;
+	groupCheckbox?: boolean;
 	handleChange?: (item: SelectOptionProps[]) => void;
 }
 
@@ -22,6 +37,8 @@ const SSelect = ({
 	placeholder = '선택',
 	disabled = false,
 	useMultiple = false,
+	checkbox = false,
+	groupCheckbox = false,
 	handleChange,
 }: SelectProps) => {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -31,6 +48,83 @@ const SSelect = ({
 	useEffect(() => {
 		if (handleChange) handleChange(value);
 	}, [value, handleChange]);
+
+	const getSelectLabel = () => {
+		if (!value.length) {
+			return placeholder;
+		}
+
+		const allOptions = groupCheckbox
+			? (options as GroupProps[])
+					.flatMap((group) => group.options)
+					.filter((option) => !option.disabled)
+			: options.filter((option) => !option.disabled);
+
+		const isSelectedAllOptions = allOptions.every((option) =>
+			value.includes(option as SelectOptionProps)
+		);
+
+		if (isSelectedAllOptions) {
+			return '전체';
+		}
+
+		if (groupCheckbox) {
+			return (
+				(options as GroupProps[])
+					.map((group) => {
+						if (group.disabled) return null;
+
+						const selectedOptions = group.options.filter(
+							(option) => !option.disabled && value.includes(option)
+						);
+
+						if (selectedOptions.length === group.options.length) {
+							return group.groupName;
+						} else if (selectedOptions.length > 0) {
+							return selectedOptions.map((option) => option.label).join(', ');
+						}
+
+						return null;
+					})
+					.filter(Boolean)
+					.join(', ') || placeholder
+			);
+		}
+
+		return value.map((item) => item.label).join(', ');
+	};
+
+	const getDropDownItems = () => {
+		if (groupCheckbox) {
+			return (
+				<SelectGroupCheckboxItems
+					options={options as GroupProps[]}
+					value={value}
+					setValue={setValue}
+				/>
+			);
+		}
+
+		if (checkbox) {
+			return (
+				<SelectCheckboxItems
+					options={options as SelectOptionProps[]}
+					value={value}
+					setValue={setValue}
+				/>
+			);
+		}
+
+		return (
+			<SelectItems
+				options={options as SelectOptionProps[]}
+				useMultiple={useMultiple}
+				value={value}
+				setValue={setValue}
+				setIsDropdownOpen={setIsDropdownOpen}
+			/>
+		);
+	};
 
 	return (
 		<>
@@ -43,15 +137,11 @@ const SSelect = ({
 				onClick={() => setIsDropdownOpen((previousStatus) => !previousStatus)}
 				disabled={disabled}
 			>
-				{!value.length
-					? placeholder
-					: value.length === options.filter((option) => !option.disabled).length
-						? '전체'
-						: value.map((item) => item.value).join(', ')}
 				<Dropdown12
 					className={`absolute right-8pxr top-8pxr ${isDropdownOpen && 'rotate-180'}`}
 					style={{ transition: 'transform 0.3s' }}
 				/>
+				{getSelectLabel()}
 			</button>
 
 			<SelectDropdownContainer
@@ -59,13 +149,7 @@ const SSelect = ({
 				isOpen={isDropdownOpen}
 				setIsOpen={setIsDropdownOpen}
 			>
-				<SelectItems
-					options={options}
-					useMultiple={useMultiple}
-					value={value}
-					setValue={setValue}
-					setIsDropdownOpen={setIsDropdownOpen}
-				/>
+				{getDropDownItems()}
 			</SelectDropdownContainer>
 		</>
 	);

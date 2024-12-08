@@ -1,9 +1,6 @@
 import SSelect from './components/SSelect';
-import SSelectCheckbox from './components/SSelectCheckbox';
 import { routes } from './routes/router';
 import { FaCircle, FaAngleRight } from 'react-icons/fa6';
-import SSelectGroupCheckbox from './components/SSelectGroupCheckbox';
-import { group } from 'console';
 
 function App() {
 	const options = [
@@ -35,23 +32,12 @@ function App() {
 			groupName: 'group2',
 			groupChecked: true,
 			options: [
-				{ label: 'option 1', value: 1 },
-				{ label: 'option 2', value: 2 },
-				{ label: 'option 3', value: 3 },
-				{ label: 'option 4', value: 4 },
+				{ label: 'option 1', value: 'ㄴㅇ' },
+				{ label: 'option 2', value: '3' },
+				{ label: 'option 3', value: '4' },
+				{ label: 'option 4', value: '5' },
 			],
 		},
-		// {
-		// 	groupName: 'group3',
-		// 	groupChecked: true,
-		// 	disabled: true,
-		// 	options: [
-		// 		{ label: 'option 1', value: 1 },
-		// 		{ label: 'option 2', value: 2 },
-		// 		{ label: 'option 3', value: 3 },
-		// 		{ label: 'option 4', value: 4 },
-		// 	],
-		// },
 	];
 
 	return (
@@ -74,21 +60,21 @@ function App() {
 					</li>
 				))}
 			</ul>
-			{/* <SSelect
+			<SSelect
 				options={options}
-				defaultValue={defaultValue}
 				classname='w-150pxr'
-				disabled={true}
-			></SSelect> */}
-			<SSelectCheckbox
+				useMultiple={true}
+			></SSelect>
+			<SSelect
 				options={options}
-				// defaultValue={defaultValue}
 				classname='w-150pxr'
-			></SSelectCheckbox>
-			<SSelectGroupCheckbox
+				checkbox={true}
+			></SSelect>
+			<SSelect
 				options={groupOptions}
 				classname='w-150pxr'
-			></SSelectGroupCheckbox>
+				groupCheckbox={true}
+			></SSelect>
 		</section>
 	);
 }
