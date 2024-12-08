@@ -25,11 +25,11 @@ const SelectGroupCheckboxItems = ({
 	const handleGroupClick = (group: GroupProps) => {
 		if (group.disabled) return;
 
-		const isGroupSelected = group.options.every((option) =>
+		const isAllSelectedGroupOptions = group.options.every((option) =>
 			value.includes(option)
 		);
 
-		if (isGroupSelected) {
+		if (isAllSelectedGroupOptions) {
 			setValue((prev) => prev.filter((item) => !group.options.includes(item)));
 		} else {
 			setValue((prev) => [
@@ -39,7 +39,7 @@ const SelectGroupCheckboxItems = ({
 		}
 	};
 
-	const groupChecked = (group: GroupProps) => {
+	const getGroupCheckedState = (group: GroupProps) => {
 		const groupOptions = group.options.filter((option) => !option.disabled);
 		const selectedGroupOptionLength = groupOptions.filter((option) =>
 			value.includes(option)
@@ -61,15 +61,14 @@ const SelectGroupCheckboxItems = ({
 					key={group.groupName}
 					aria-disabled={group.disabled}
 				>
-					<div className='group flex w-full items-center items-center gap-8pxr bg-Grey_Lighten-5 px-12pxr py-4pxr font-bold aria-disabled:bg-white aria-disabled:text-Grey_Lighten-1'>
+					<div className='group flex w-full items-center items-center gap-8pxr bg-Grey_Lighten-5 px-12pxr py-4pxr font-bold aria-disabled:pointer-events-none aria-disabled:bg-white aria-disabled:text-Grey_Lighten-1'>
 						{group.groupChecked ? (
 							<SCheckbox
 								label={group.groupName}
-								checked={groupChecked(group)}
+								checked={getGroupCheckedState(group)}
 								onChange={() => handleGroupClick(group)}
 								labelClass='w-full'
 								disabled={group.disabled}
-								className={`${value.length === group.options.length && 'group-hover/select-dropdown-item:before:border-white'}`}
 							/>
 						) : (
 							<span>{group.groupName}</span>

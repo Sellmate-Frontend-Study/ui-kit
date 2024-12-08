@@ -10,6 +10,9 @@ const meta = {
 	tags: ['autodocs'],
 	argTypes: {
 		disabled: { control: 'boolean' },
+		useMultiple: { control: 'boolean' },
+		checkbox: { control: 'boolean' },
+		groupCheckbox: { control: 'boolean' },
 	},
 	// Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
 } satisfies Meta<typeof SSelect>;
@@ -62,7 +65,7 @@ const groupOptionsWithoutGroupChecked = [
 			{ label: 'option 1', value: 1 },
 			{ label: 'option 2', value: 2 },
 			{ label: 'option 3', value: 3 },
-			{ label: 'option 4', value: 4 },
+			{ label: 'option 4', value: 4, },
 		],
 	},
 	{

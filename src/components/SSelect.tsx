@@ -134,7 +134,7 @@ const SSelect = ({
 					`s-select relative inline-block cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap border border-Grey_Lighten-1 py-4pxr pl-12pxr pr-20pxr text-start hover:bg-Grey_Lighten-5 disabled:cursor-not-allowed disabled:border-Grey_Lighten-2 disabled:bg-Grey_Lighten-4 disabled:text-Grey_Default`,
 					classname,
 				].join(' ')}
-				onClick={() => setIsDropdownOpen((previousStatus) => !previousStatus)}
+				onClick={() => setIsDropdownOpen((prev) => !prev)}
 				disabled={disabled}
 			>
 				<Dropdown12
