@@ -1,8 +1,9 @@
+import { useEffect, useState } from 'react';
 import colors from '../css/colors';
 
 export interface Props {
 	type: 'bar' | 'circle';
-	progress: number;
+	percent: number;
 	loading?: string;
 	progressLabel?: string;
 	size?: number;
@@ -13,7 +14,7 @@ export interface Props {
 
 const SProgress = ({
 	type = 'circle',
-	progress,
+	percent,
 	loading,
 	progressLabel,
 	size = 80,
@@ -21,6 +22,7 @@ const SProgress = ({
 	trackColor = 'Grey_Lighten-4',
 	progressColor = 'Blue_C_Default',
 }: Props) => {
+	const [progress, setProgress] = useState(0);
 	const radius = (size - strokeWidth) / 2;
 	const circumference = 2 * Math.PI * radius;
 	const strokeDashoffset = circumference * (1 - progress / 100);
@@ -43,6 +45,24 @@ const SProgress = ({
 		left: '50%',
 		transform: 'translate(-50%, -50%)',
 	};
+
+	useEffect(() => {
+		let startTime: number | null = null;
+		const duration = 2000;
+		const step = (timestamp: number) => {
+			if (!startTime) startTime = timestamp;
+			const elapsed = timestamp - startTime;
+			const easeOutProgress = Math.min(1, 1 - Math.pow(1 - elapsed / duration, 2));
+			const currentProgress = Math.round(easeOutProgress * percent);
+			setProgress(currentProgress);
+			if (elapsed < duration) {
+				requestAnimationFrame(step);
+			} else {
+				setProgress(percent);
+			}
+		};
+		requestAnimationFrame(step);
+	}, [percent]);
 
 	return (
 		<div style={{ width: `${size}px` }}>

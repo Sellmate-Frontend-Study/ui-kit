@@ -11,7 +11,7 @@ const Progress = () => {
 					type='circle'
 					// loading='loading'
 					progressLabel='loading'
-					progress={60}
+					percent={60}
 				/>
 			</div>
 
@@ -19,14 +19,14 @@ const Progress = () => {
 				type='bar'
 				size={360}
 				progressLabel='loading'
-				progress={51}
+				percent={51}
 			/>
 			<SProgress
 				type='bar'
 				size={360}
 				progressLabel='loading'
 				progressColor='Red_Lighten-1'
-				progress={51}
+				percent={51}
 			/>
 		</div>
 	);
