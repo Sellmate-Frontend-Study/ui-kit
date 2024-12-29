@@ -3,7 +3,6 @@ import SDatePicker from '../components/SDatePicker';
 
 const DatePicker = () => {
 	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
 	const handleChange = (date: Date) => {
 		setSelectedDate(date);
 	};
@@ -14,13 +13,10 @@ const DatePicker = () => {
 				<b>SDatePicker</b>
 			</div>
 			<div className='inline-flex items-center gap-8pxr'>
-				<SDatePicker
-					selectedDate={selectedDate}
-					onChange={handleChange}
-				/>
+				<SDatePicker onChange={handleChange} />
 			</div>
 			{selectedDate && (
-				<div className='mt-4'>{selectedDate.toLocaleDateString()}</div>
+				<div className='mt-4pxr'>{selectedDate.toLocaleDateString()}</div>
 			)}
 		</div>
 	);
