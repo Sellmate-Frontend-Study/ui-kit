@@ -5,6 +5,12 @@ const DatePicker = () => {
 	const [date, setDate] = useState(['2024-12-14']);
 
 	useEffect(() => {
+		setTimeout(() => {
+			setDate(['2024-12-20']);
+		}, 2000);
+	}, []);
+
+	useEffect(() => {
 		console.log(date);
 	}, [date]);
 	return (
@@ -14,6 +20,7 @@ const DatePicker = () => {
 			</div>
 			<div className='inline-flex items-center gap-8pxr'>
 				<SDatepicker
+					label={'label'}
 					date={date}
 					onChange={(date) => setDate([date])}
 				/>
