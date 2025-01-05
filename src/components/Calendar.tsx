@@ -89,6 +89,7 @@ export default function Calendar({
 
 		newDate.setDate(dateInfo.date);
 		const formattedDate = newDate.toISOString().split('T')[0];
+		setCurrentDate(newDate);
 		onChange(formattedDate, true); // true를 전달하여 달력을 닫도록 함
 	};
 
