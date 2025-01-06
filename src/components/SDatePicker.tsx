@@ -58,7 +58,7 @@ const SDatePicker = ({ onChange }: SDatePickerProps) => {
 		<>
 			<div
 				ref={inputRef}
-				className='relative flex w-134pxr cursor-pointer items-center rounded-2pxr border border-Grey_Lighten-1 bg-white px-8pxr py-4pxr'
+				className='s-date-picker relative flex w-134pxr cursor-pointer items-center rounded-2pxr border border-Grey_Lighten-1 bg-white px-8pxr py-4pxr'
 				onClick={() => setIsOpen((prev) => !prev)}
 			>
 				<span className='mr-4pxr text-Grey_Darken-1'>
