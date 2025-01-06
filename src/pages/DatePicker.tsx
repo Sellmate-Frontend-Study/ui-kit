@@ -22,7 +22,15 @@ const DatePicker = () => {
 				<SDatepicker
 					label={'label'}
 					date={date}
-					onChange={(date) => setDate([date])}
+					onChange={(date) => setDate(date)}
+				/>
+			</div>
+			<div className='inline-flex items-center gap-8pxr'>
+				<SDatepicker
+					label={'label'}
+					date={date}
+					onChange={(date) => setDate(date)}
+					clearable
 				/>
 			</div>
 		</div>

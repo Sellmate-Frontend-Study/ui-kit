@@ -3,14 +3,21 @@ import Calendar from './Calendar';
 import { useEffect, useRef, useState } from 'react';
 import CalendarIcon from '../assets/CalendarIcon';
 import colors from '../css/colors';
+import { Close12 } from '../assets/CloseIcon';
 
 type Props = {
 	date: string[];
-	onChange: (date: string) => void;
+	onChange: (date: string[]) => void;
 	label?: string;
+	clearable?: boolean;
 };
 
-export default function SDatepicker({ date, onChange, label }: Props) {
+export default function SDatepicker({
+	date,
+	onChange,
+	label,
+	clearable = false,
+}: Props) {
 	const [isFocused, setIsFocused] = useState<boolean>(false);
 	const [position, setPosition] = useState<{ top: number; left: number } | null>(
 		null
@@ -38,11 +45,15 @@ export default function SDatepicker({ date, onChange, label }: Props) {
 	};
 
 	const handleDateChange = (newDate: string, close: boolean = false) => {
-		onChange(newDate);
+		onChange([newDate]);
 		if (close) {
 			setIsFocused(false);
 		}
 	};
+
+	function clearDate() {
+		onChange([]);
+	}
 
 	useEffect(() => {
 		document.addEventListener('click', handleClickOutside);
@@ -82,7 +93,7 @@ export default function SDatepicker({ date, onChange, label }: Props) {
 					value={date[0] ? formatDate(date[0]) : ''}
 					readOnly
 					className={[
-						'cursor-pointer px-24pxr py-4pxr text-center leading-20pxr focus:outline-none',
+						'cursor-pointer px-24pxr py-3pxr text-center leading-20pxr focus:outline-none',
 						label ? 'rounded-[0_2pxr_2pxr_0]' : 'rounded-2pxr',
 					].join(' ')}
 					style={{
@@ -91,6 +102,12 @@ export default function SDatepicker({ date, onChange, label }: Props) {
 					}}
 					onClick={() => setIsFocused(true)}
 				/>
+				{date.length > 0 && clearable && (
+					<Close12
+						className='absolute right-9pxr top-9pxr'
+						onClick={() => clearDate()}
+					/>
+				)}
 				<CalendarIcon className='absolute left-8pxr top-6pxr' />
 				{position &&
 					createPortal(
