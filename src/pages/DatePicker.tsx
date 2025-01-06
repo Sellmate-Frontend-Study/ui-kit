@@ -15,7 +15,8 @@ const DatePicker = () => {
 			<div className='inline-flex items-center gap-8pxr'>
 				<SDatePicker
 					onChange={handleChange}
-					// label='Label'
+					// disabled={true}
+					label='Label'
 				/>
 			</div>
 			{selectedDate && (

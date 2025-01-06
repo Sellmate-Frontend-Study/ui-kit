@@ -6,6 +6,7 @@ import { Calendar16 } from '../assets/Calendar';
 interface SDatePickerProps {
 	className?: string;
 	label?: string;
+	disabled?: boolean;
 	onChange: (date: Date) => void;
 }
 
@@ -16,7 +17,12 @@ const utcFormat = (date: Date) => {
 	return `${year}-${month}-${day}`;
 };
 
-const SDatePicker = ({ onChange, className, label }: SDatePickerProps) => {
+const SDatePicker = ({
+	onChange,
+	className,
+	label,
+	disabled,
+}: SDatePickerProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 	const [position, setPosition] = useState<{ top: number; left: number } | null>(
@@ -67,11 +73,19 @@ const SDatePicker = ({ onChange, className, label }: SDatePickerProps) => {
 		<>
 			<div
 				ref={inputRef}
-				className={`s-date-picker relative flex cursor-pointer items-center rounded-2pxr border border-Grey_Lighten-1 bg-white ${className}`}
-				onClick={() => setIsOpen((prev) => !prev)}
+				className={`s-date-picker relative flex items-center rounded-2pxr border ${
+					disabled
+						? 'cursor-not-allowed border-Grey_Lighten-2 bg-Grey_Lighten-4 text-Grey_Default'
+						: 'cursor-pointer border-Grey_Lighten-1 bg-white'
+				} ${className}`}
+				onClick={() => {
+					if (!disabled) setIsOpen((prev) => !prev);
+				}}
 			>
 				{label && (
-					<div className='flex items-center border-r border-Grey_Lighten-1 bg-Grey_Lighten-5 px-12pxr py-4pxr'>
+					<div
+						className={`flex items-center border-r border-Grey_Lighten-1 bg-Grey_Lighten-5 px-12pxr py-4pxr ${disabled && 'border-Grey_Lighten-2 bg-Grey_Lighten-4 text-Grey_Default'}`}
+					>
 						<span className='text-Grey_Darken-2'>{label}</span>
 					</div>
 				)}
