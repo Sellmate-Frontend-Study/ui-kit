@@ -13,7 +13,10 @@ const DatePicker = () => {
 				<b>SDatePicker</b>
 			</div>
 			<div className='inline-flex items-center gap-8pxr'>
-				<SDatePicker onChange={handleChange} />
+				<SDatePicker
+					onChange={handleChange}
+					// label='Label'
+				/>
 			</div>
 			{selectedDate && (
 				<div className='mt-4pxr'>{selectedDate.toLocaleDateString()}</div>

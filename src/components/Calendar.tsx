@@ -62,6 +62,8 @@ const Calendar = ({ onDateChange, selectedDate }: CalendarProps) => {
 		}
 	};
 
+	console.log('selectedDate', selectedDate);
+
 	return (
 		<div className='calendar w-302pxr flex-col items-center rounded-8pxr border-none bg-white p-16pxr'>
 			<div className='mb-12pxr flex items-center justify-between'>
@@ -114,8 +116,7 @@ const Calendar = ({ onDateChange, selectedDate }: CalendarProps) => {
 						<button
 							key={i}
 							className={`h-28pxr w-28pxr text-center ${
-								selectedDate &&
-								selectedDate.toLocaleDateString() === date.toLocaleDateString()
+								selectedDate && selectedDate.getTime() === date.getTime()
 									? 'rounded-full bg-Blue_C_Default font-bold text-white'
 									: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:font-bold hover:text-white'
 							}`}
