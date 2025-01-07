@@ -48,22 +48,24 @@ const Calendar = ({ onDateChange, selectedDate }: CalendarProps) => {
 	const handlePrevMonth = () => {
 		if (currentMonth === 0) {
 			setCurrentMonth(11);
-			setCurrentYear((prev) => prev - 1);
+			setCurrentYear((year) => year - 1);
 		} else {
-			setCurrentMonth((prev) => prev - 1);
+			setCurrentMonth((month) => month - 1);
 		}
 	};
 	const handleNextMonth = () => {
 		if (currentMonth === 11) {
 			setCurrentMonth(0);
-			setCurrentYear((prev) => prev + 1);
+			setCurrentYear((year) => year + 1);
 		} else {
-			setCurrentMonth((prev) => prev + 1);
+			setCurrentMonth((month) => month + 1);
 		}
 	};
 
+	console.log('selectedDate', selectedDate);
+
 	return (
-		<div className='w-302pxr flex-col items-center rounded-8pxr border-none bg-white p-16pxr'>
+		<div className='calendar w-302pxr flex-col items-center rounded-8pxr border-none bg-white p-16pxr'>
 			<div className='mb-12pxr flex items-center justify-between'>
 				<div className='flex items-center space-x-16pxr'>
 					<button
@@ -99,11 +101,11 @@ const Calendar = ({ onDateChange, selectedDate }: CalendarProps) => {
 				</div>
 			</div>
 
-			<div className='grid grid-cols-7 gap-4pxr'>
+			<div className='grid grid-cols-7 gap-10pxr'>
 				{DAYS.map((day) => (
 					<div
 						key={day}
-						className='flex aspect-square items-center justify-center text-Grey_Default'
+						className='flex h-28pxr w-28pxr items-center justify-center text-Grey_Default'
 					>
 						{day}
 					</div>
@@ -113,9 +115,8 @@ const Calendar = ({ onDateChange, selectedDate }: CalendarProps) => {
 					date ? (
 						<button
 							key={i}
-							className={`aspect-square text-center ${
-								selectedDate &&
-								selectedDate.toLocaleDateString() === date.toLocaleDateString()
+							className={`h-28pxr w-28pxr text-center ${
+								selectedDate && selectedDate.getTime() === date.getTime()
 									? 'rounded-full bg-Blue_C_Default font-bold text-white'
 									: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:font-bold hover:text-white'
 							}`}
@@ -125,7 +126,7 @@ const Calendar = ({ onDateChange, selectedDate }: CalendarProps) => {
 						</button>
 					) : (
 						<div
-							className='aspect-square'
+							className='h-28pxr w-28pxr'
 							key={i}
 						></div>
 					)
