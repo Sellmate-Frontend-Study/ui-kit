@@ -2,12 +2,14 @@ import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import Calendar from './Calendar';
 import { Calendar16 } from '../assets/Calendar';
+import CalendarRange from './CalendarRange';
 
 interface SDatePickerProps {
 	className?: string;
 	label?: string;
 	disabled?: boolean;
 	onChange: (date: Date) => void;
+	isRange?: boolean;
 }
 
 const utcFormat = (date: Date) => {
@@ -22,6 +24,7 @@ const SDatePicker = ({
 	className,
 	label,
 	disabled,
+	isRange = false,
 }: SDatePickerProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -112,10 +115,17 @@ const SDatePicker = ({
 						}}
 						className='rounded-8pxr border bg-white'
 					>
-						<Calendar
-							selectedDate={selectedDate}
-							onDateChange={handleDateChange}
-						/>
+						{isRange ? (
+							<CalendarRange
+								selectedDate={selectedDate}
+								onDateChange={handleDateChange}
+							/>
+						) : (
+							<Calendar
+								selectedDate={selectedDate}
+								onDateChange={handleDateChange}
+							/>
+						)}
 					</div>,
 					document.body
 				)}
