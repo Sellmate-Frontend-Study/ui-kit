@@ -62,8 +62,6 @@ const Calendar = ({ onDateChange, selectedDate }: CalendarProps) => {
 		}
 	};
 
-	console.log('selectedDate', selectedDate);
-
 	return (
 		<div className='calendar w-302pxr flex-col items-center rounded-8pxr border-none bg-white p-16pxr'>
 			<div className='mb-12pxr flex items-center justify-between'>
