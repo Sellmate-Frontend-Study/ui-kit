@@ -1,6 +1,7 @@
-import { useState } from 'react';
 import { ArrowRight12 } from '../assets/ArrowRightIcon';
 import { ArrowLeft12 } from '../assets/ArrowLeftIcon';
+import { useCalendarDates } from './datepicker/useCalendarDate';
+import { DAYS } from './datepicker/datePickerUtils';
 
 interface CalendarRangeProps {
 	onDateChange: (startDate: Date | null, endDate: Date | null) => void;
@@ -10,7 +11,77 @@ interface CalendarRangeProps {
 	limitStartDate?: Date;
 	limitEndDate?: Date;
 }
-const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+
+interface CalendarMonthProps {
+	dates: (Date | null)[];
+	onDateClick: (date: Date) => void;
+	isDisabled: (date: Date) => boolean;
+	isStartOfRange: (date: Date) => boolean;
+	isEndOfRange: (date: Date) => boolean;
+	isInRange: (date: Date) => boolean;
+	isToday: (date: Date) => boolean;
+}
+
+const CalendarMonth = ({
+	dates,
+	onDateClick,
+	isDisabled,
+	isStartOfRange,
+	isEndOfRange,
+	isInRange,
+	isToday,
+}: CalendarMonthProps) => {
+	return (
+		<div className='mt-12pxr grid grid-cols-7 gap-y-4pxr text-center'>
+			{DAYS.map((day) => (
+				<div
+					key={day}
+					className='mb-4pxr text-Grey_Default'
+				>
+					{day}
+				</div>
+			))}
+
+			{dates.map((date, i) =>
+				date ? (
+					<button
+						key={i}
+						className={`relative h-32pxr w-32pxr ${
+							isDisabled(date)
+								? 'cursor-not-allowed text-Grey_Lighten-2'
+								: isStartOfRange(date)
+									? 'rounded-l-full bg-Blue_C_Lighten-5'
+									: isEndOfRange(date)
+										? 'rounded-r-full bg-Blue_C_Lighten-5'
+										: isInRange(date)
+											? 'bg-Blue_C_Lighten-5'
+											: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:text-white'
+						} ${isInRange(date) && !(isStartOfRange(date) || isEndOfRange(date)) ? 'mx-0 rounded-none' : ''} ${
+							isToday(date) && !isDisabled(date) ? 'rounded-full border' : ''
+						}`}
+						onClick={() => !isDisabled(date) && onDateClick(date)}
+						disabled={isDisabled(date)}
+					>
+						<span
+							className={`flex h-32pxr w-32pxr items-center justify-center ${
+								isStartOfRange(date) || isEndOfRange(date)
+									? 'rounded-full bg-Blue_C_Default font-bold text-white'
+									: ''
+							}`}
+						>
+							{date.getDate()}
+						</span>
+					</button>
+				) : (
+					<div
+						key={i}
+						className='h-32pxr w-32pxr'
+					></div>
+				)
+			)}
+		</div>
+	);
+};
 
 const CalendarRange = ({
 	onDateChange,
@@ -20,21 +91,16 @@ const CalendarRange = ({
 	limitStartDate,
 	limitEndDate,
 }: CalendarRangeProps) => {
+	const {
+		currentMonth,
+		currentYear,
+		handlePrevMonth,
+		handleNextMonth,
+		calculateDates,
+		setCurrentMonth,
+		setCurrentYear,
+	} = useCalendarDates();
 	const today = new Date();
-	const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-	const [currentYear, setCurrentYear] = useState(today.getFullYear());
-
-	const calculateDates = (month: number, year: number) => {
-		const firstDay = new Date(year, month, 1).getDay();
-		const lastDay = new Date(year, month + 1, 0).getDate();
-		const dates = Array.from(
-			{ length: lastDay },
-			(_, i) => new Date(year, month, i + 1)
-		);
-		const empty = Array.from({ length: firstDay }, () => null);
-
-		return [...empty, ...dates];
-	};
 
 	const dates = calculateDates(currentMonth, currentYear);
 	const nextDates = calculateDates(
@@ -52,46 +118,27 @@ const CalendarRange = ({
 		}
 	};
 
-	const handlePrevMonth = () => {
-		if (currentMonth === 0) {
-			setCurrentMonth(11);
-			setCurrentYear((year) => year - 1);
-		} else {
-			setCurrentMonth((month) => month - 1);
-		}
-	};
-
-	const handleNextMonth = () => {
-		if (currentMonth === 11) {
-			setCurrentMonth(0);
-			setCurrentYear((year) => year + 1);
-		} else {
-			setCurrentMonth((month) => month + 1);
-		}
-	};
-
-	const isToday = (date: Date) =>
-		date.getFullYear() === today.getFullYear() &&
-		date.getMonth() === today.getMonth() &&
-		date.getDate() === today.getDate();
-
-	const isInRange = (date: Date) => {
-		if (!startDate || !endDate) return false;
-		return date >= startDate && date <= endDate;
-	};
-
-	const isStartOfRange = (date: Date) =>
-		startDate && date.getTime() === startDate.getTime();
-
-	const isEndOfRange = (date: Date) =>
-		endDate && date.getTime() === endDate.getTime();
-
 	const handleTodayClick = () => {
 		setCurrentMonth(today.getMonth());
 		setCurrentYear(today.getFullYear());
 	};
+	const isToday = (date: Date): boolean =>
+		date.getFullYear() === today.getFullYear() &&
+		date.getMonth() === today.getMonth() &&
+		date.getDate() === today.getDate();
 
-	const isDisabled = (date: Date) => {
+	const isInRange = (date: Date): boolean => {
+		if (!startDate || !endDate) return false;
+		return date >= startDate && date <= endDate;
+	};
+
+	const isStartOfRange = (date: Date): boolean =>
+		!!(startDate && date.getTime() === startDate.getTime());
+
+	const isEndOfRange = (date: Date): boolean =>
+		!!(endDate && date.getTime() === endDate.getTime());
+
+	const isDisabled = (date: Date): boolean => {
 		if (limitStartDate && date.getTime() < limitStartDate.getTime()) return true;
 		if (limitEndDate && date.getTime() > limitEndDate.getTime()) return true;
 
@@ -141,58 +188,15 @@ const CalendarRange = ({
 							{currentYear}.{String(currentMonth + 1).padStart(2, '0')}
 						</span>
 					</div>
-					<div className='mt-12pxr grid grid-cols-7 gap-y-4pxr text-center'>
-						{DAYS.map((day) => (
-							<div
-								key={day}
-								className='mb-4pxr text-Grey_Default'
-							>
-								{day}
-							</div>
-						))}
-
-						{dates.map((date, i) =>
-							date ? (
-								<button
-									key={i}
-									className={`relative h-28pxr w-28pxr ${
-										isDisabled(date)
-											? 'cursor-not-allowed text-Grey_Lighten-2'
-											: startDate && endDate
-												? isStartOfRange(date)
-													? 'rounded-l-full bg-Blue_C_Lighten-5'
-													: isEndOfRange(date)
-														? 'rounded-r-full bg-Blue_C_Lighten-5'
-														: isInRange(date)
-															? 'bg-Blue_C_Lighten-5'
-															: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:text-white'
-												: isStartOfRange(date) || isEndOfRange(date)
-													? 'rounded-full bg-Blue_C_Default text-white'
-													: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:text-white'
-									} ${isInRange(date) && !(isStartOfRange(date) || isEndOfRange(date)) ? 'mx-0 rounded-none' : ''} ${
-										isToday(date) && !isDisabled(date) ? 'rounded-full border' : ''
-									}`}
-									onClick={() => !isDisabled(date) && handleDateClick(date)}
-									disabled={isDisabled(date)}
-								>
-									<span
-										className={`flex  h-28pxr w-28pxr items-center justify-center ${
-											isStartOfRange(date) || isEndOfRange(date)
-												? 'rounded-full bg-Blue_C_Default font-bold text-white'
-												: ''
-										}`}
-									>
-										{date.getDate()}
-									</span>
-								</button>
-							) : (
-								<div
-									key={i}
-									className='h-28pxr w-28pxr'
-								></div>
-							)
-						)}
-					</div>
+					<CalendarMonth
+						dates={dates}
+						onDateClick={handleDateClick}
+						isDisabled={isDisabled}
+						isStartOfRange={isStartOfRange}
+						isEndOfRange={isEndOfRange}
+						isInRange={isInRange}
+						isToday={isToday}
+					/>
 				</div>
 				<div className='my-12pxr w-1pxr bg-Grey_Lighten-8'></div>
 				<div className='w-1/2'>
@@ -209,58 +213,15 @@ const CalendarRange = ({
 								: `${currentYear}.${String(currentMonth + 2).padStart(2, '0')}`}
 						</span>
 					</div>
-					<div className='mt-12pxr grid grid-cols-7 gap-y-4pxr text-center'>
-						{DAYS.map((day) => (
-							<div
-								key={day}
-								className='mb-4pxr text-Grey_Default'
-							>
-								{day}
-							</div>
-						))}
-
-						{nextDates.map((date, i) =>
-							date ? (
-								<button
-									key={i}
-									className={`relative h-28pxr w-28pxr ${
-										isDisabled(date)
-											? 'cursor-not-allowed text-Grey_Lighten-2'
-											: startDate && endDate
-												? isStartOfRange(date)
-													? 'rounded-l-full bg-Blue_C_Lighten-5'
-													: isEndOfRange(date)
-														? 'rounded-r-full bg-Blue_C_Lighten-5'
-														: isInRange(date)
-															? 'bg-Blue_C_Lighten-5'
-															: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:text-white'
-												: isStartOfRange(date) || isEndOfRange(date)
-													? 'rounded-full bg-Blue_C_Default text-white'
-													: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:text-white'
-									} ${isInRange(date) && !(isStartOfRange(date) || isEndOfRange(date)) ? 'mx-0 rounded-none' : ''} ${
-										isToday(date) && !isDisabled(date) ? 'rounded-full border' : ''
-									}`}
-									onClick={() => !isDisabled(date) && handleDateClick(date)}
-									disabled={isDisabled(date)}
-								>
-									<span
-										className={`flex h-28pxr w-28pxr items-center justify-center ${
-											isStartOfRange(date) || isEndOfRange(date)
-												? 'rounded-full bg-Blue_C_Default font-bold text-white'
-												: ''
-										}`}
-									>
-										{date.getDate()}
-									</span>
-								</button>
-							) : (
-								<div
-									key={i}
-									className='h-28pxr w-28pxr'
-								></div>
-							)
-						)}
-					</div>
+					<CalendarMonth
+						dates={nextDates}
+						onDateClick={handleDateClick}
+						isDisabled={isDisabled}
+						isStartOfRange={isStartOfRange}
+						isEndOfRange={isEndOfRange}
+						isInRange={isInRange}
+						isToday={isToday}
+					/>
 				</div>
 			</div>
 		</div>

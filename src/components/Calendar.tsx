@@ -1,65 +1,27 @@
-import { useState } from 'react';
 import { ArrowRight12 } from '../assets/ArrowRightIcon';
 import { ArrowLeft12 } from '../assets/ArrowLeftIcon';
+import { useCalendarDates } from './datepicker/useCalendarDate';
+import { DAYS, MONTHS } from './datepicker/datePickerUtils';
 
 interface CalendarProps {
 	onDateChange: (date: Date) => void;
 	selectedDate: Date | null;
 }
 
-const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
-const MONTHS = [
-	'1월',
-	'2월',
-	'3월',
-	'4월',
-	'5월',
-	'6월',
-	'7월',
-	'8월',
-	'9월',
-	'10월',
-	'11월',
-	'12월',
-];
-
 const Calendar = ({ onDateChange, selectedDate }: CalendarProps) => {
-	const today = new Date();
-	const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-	const [currentYear, setCurrentYear] = useState(today.getFullYear());
+	const {
+		currentMonth,
+		currentYear,
+		handlePrevMonth,
+		handleNextMonth,
+		calculateDates,
+		setCurrentYear,
+	} = useCalendarDates();
 
-	const calculateDates = (month: number, year: number) => {
-		const firstDay = new Date(year, month, 1).getDay();
-		const lastDay = new Date(year, month + 1, 0).getDate();
-		const dates = Array.from(
-			{ length: lastDay },
-			(_, i) => new Date(year, month, i + 1)
-		);
-		const empty = Array.from({ length: firstDay }, () => null);
-
-		return [...empty, ...dates];
-	};
 	const dates = calculateDates(currentMonth, currentYear);
 
 	const handleDateClick = (date: Date) => {
 		onDateChange(date);
-	};
-
-	const handlePrevMonth = () => {
-		if (currentMonth === 0) {
-			setCurrentMonth(11);
-			setCurrentYear((year) => year - 1);
-		} else {
-			setCurrentMonth((month) => month - 1);
-		}
-	};
-	const handleNextMonth = () => {
-		if (currentMonth === 11) {
-			setCurrentMonth(0);
-			setCurrentYear((year) => year + 1);
-		} else {
-			setCurrentMonth((month) => month + 1);
-		}
 	};
 
 	return (
@@ -99,7 +61,7 @@ const Calendar = ({ onDateChange, selectedDate }: CalendarProps) => {
 				</div>
 			</div>
 
-			<div className='grid grid-cols-7 gap-10pxr'>
+			<div className='grid grid-cols-7 gap-y-4pxr'>
 				{DAYS.map((day) => (
 					<div
 						key={day}
