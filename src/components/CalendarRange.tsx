@@ -6,6 +6,9 @@ interface CalendarRangeProps {
 	onDateChange: (startDate: Date | null, endDate: Date | null) => void;
 	startDate: Date | null;
 	endDate: Date | null;
+	limitNum?: number;
+	limitStartDate?: Date;
+	limitEndDate?: Date;
 }
 const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -13,6 +16,9 @@ const CalendarRange = ({
 	onDateChange,
 	startDate,
 	endDate,
+	limitNum,
+	limitStartDate,
+	limitEndDate,
 }: CalendarRangeProps) => {
 	const today = new Date();
 	const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -85,6 +91,19 @@ const CalendarRange = ({
 		setCurrentYear(today.getFullYear());
 	};
 
+	const isDisabled = (date: Date) => {
+		if (limitStartDate && date.getTime() < limitStartDate.getTime()) return true;
+		if (limitEndDate && date.getTime() > limitEndDate.getTime()) return true;
+
+		if (limitNum && startDate) {
+			const maxDate = new Date(startDate);
+			maxDate.setDate(startDate.getDate() + limitNum - 1);
+			if (date > maxDate) return true;
+		}
+
+		return false;
+	};
+
 	return (
 		<div className='calendar-range relative flex flex-col items-center rounded-8pxr border-none bg-white p-16pxr'>
 			<button
@@ -137,24 +156,29 @@ const CalendarRange = ({
 								<button
 									key={i}
 									className={`relative h-28pxr w-28pxr ${
-										isStartOfRange(date)
-											? 'rounded-l-full bg-Blue_C_Lighten-5'
-											: isEndOfRange(date)
-												? 'rounded-r-full bg-Blue_C_Lighten-5'
-												: isInRange(date)
-													? 'bg-Blue_C_Lighten-5'
+										isDisabled(date)
+											? 'cursor-not-allowed text-Grey_Lighten-2'
+											: startDate && endDate
+												? isStartOfRange(date)
+													? 'rounded-l-full bg-Blue_C_Lighten-5'
+													: isEndOfRange(date)
+														? 'rounded-r-full bg-Blue_C_Lighten-5'
+														: isInRange(date)
+															? 'bg-Blue_C_Lighten-5'
+															: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:text-white'
+												: isStartOfRange(date) || isEndOfRange(date)
+													? 'rounded-full bg-Blue_C_Default text-white'
 													: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:text-white'
-									} ${
-										isInRange(date) && !isStartOfRange(date) && !isEndOfRange(date)
-											? 'mx-0 rounded-none'
-											: ''
-									} ${isToday(date) && 'rounded-full border'}`}
-									onClick={() => handleDateClick(date)}
+									} ${isInRange(date) && !(isStartOfRange(date) || isEndOfRange(date)) ? 'mx-0 rounded-none' : ''} ${
+										isToday(date) && !isDisabled(date) ? 'rounded-full border' : ''
+									}`}
+									onClick={() => !isDisabled(date) && handleDateClick(date)}
+									disabled={isDisabled(date)}
 								>
 									<span
-										className={`flex h-full w-full items-center justify-center ${
+										className={`flex  h-28pxr w-28pxr items-center justify-center ${
 											isStartOfRange(date) || isEndOfRange(date)
-												? 'rounded-full bg-Blue_C_Default text-white'
+												? 'rounded-full bg-Blue_C_Default font-bold text-white'
 												: ''
 										}`}
 									>
@@ -170,7 +194,7 @@ const CalendarRange = ({
 						)}
 					</div>
 				</div>
-
+				<div className='my-12pxr w-1pxr bg-Grey_Lighten-8'></div>
 				<div className='w-1/2'>
 					<div className='relative flex items-center'>
 						<button
@@ -200,24 +224,29 @@ const CalendarRange = ({
 								<button
 									key={i}
 									className={`relative h-28pxr w-28pxr ${
-										isStartOfRange(date)
-											? 'rounded-l-full bg-Blue_C_Lighten-5'
-											: isEndOfRange(date)
-												? 'rounded-r-full bg-Blue_C_Lighten-5'
-												: isInRange(date)
-													? 'bg-Blue_C_Lighten-5'
+										isDisabled(date)
+											? 'cursor-not-allowed text-Grey_Lighten-2'
+											: startDate && endDate
+												? isStartOfRange(date)
+													? 'rounded-l-full bg-Blue_C_Lighten-5'
+													: isEndOfRange(date)
+														? 'rounded-r-full bg-Blue_C_Lighten-5'
+														: isInRange(date)
+															? 'bg-Blue_C_Lighten-5'
+															: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:text-white'
+												: isStartOfRange(date) || isEndOfRange(date)
+													? 'rounded-full bg-Blue_C_Default text-white'
 													: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:text-white'
-									} ${
-										isInRange(date) && !isStartOfRange(date) && !isEndOfRange(date)
-											? 'mx-0 rounded-none'
-											: ''
+									} ${isInRange(date) && !(isStartOfRange(date) || isEndOfRange(date)) ? 'mx-0 rounded-none' : ''} ${
+										isToday(date) && !isDisabled(date) ? 'rounded-full border' : ''
 									}`}
-									onClick={() => handleDateClick(date)}
+									onClick={() => !isDisabled(date) && handleDateClick(date)}
+									disabled={isDisabled(date)}
 								>
 									<span
-										className={`flex h-full w-full items-center justify-center ${
+										className={`flex h-28pxr w-28pxr items-center justify-center ${
 											isStartOfRange(date) || isEndOfRange(date)
-												? 'rounded-full bg-Blue_C_Default text-white'
+												? 'rounded-full bg-Blue_C_Default font-bold text-white'
 												: ''
 										}`}
 									>

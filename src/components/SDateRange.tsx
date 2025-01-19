@@ -6,6 +6,9 @@ import CalendarRange from './CalendarRange';
 interface SDateRangeProps {
 	className?: string;
 	label?: string;
+	limitNum?: number;
+	limitStartDate?: Date;
+	limitEndDate?: Date;
 	disabled?: boolean;
 	onChange: (startDate: Date | null, endDate: Date | null) => void;
 }
@@ -22,6 +25,9 @@ const SDateRange = ({
 	className,
 	label,
 	disabled,
+	limitNum,
+	limitStartDate,
+	limitEndDate,
 }: SDateRangeProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [startDate, setStartDate] = useState<Date | null>(null);
@@ -125,6 +131,9 @@ const SDateRange = ({
 							startDate={startDate}
 							endDate={endDate}
 							onDateChange={handleDateChange}
+							limitStartDate={limitStartDate}
+							limitEndDate={limitEndDate}
+							limitNum={limitNum}
 						/>
 					</div>,
 					document.body
