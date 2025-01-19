@@ -1,77 +1,59 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { ArrowLeft12 } from '../assets/ArrowLeftIcon';
 import { ArrowRight12 } from '../assets/ArrowRightIcon';
 import { CalendarComponent } from './calendar/Calendar';
-
-interface DateInfo {
-	date: number;
-	flag: 'prev' | 'curr' | 'next';
-}
+import { isBeforeDate } from './calendar/calculateDate';
 
 type Props = {
 	isFocused: boolean;
 	position: { top: number; left: number };
 	date: string[];
-	onChange: (date: string, shouldClose?: boolean) => void;
+	onChange: (date: string[], shouldClose?: boolean) => void;
+	selectable?: string[];
+	limit?: number;
 };
 export default function RangeCalendar({
 	isFocused,
 	position,
 	date,
 	onChange,
+	selectable,
+	limit,
 }: Props) {
-	const [currentDate, setCurrentDate] = useState(() => new Date(date[0]));
+	const [initDate, setInitDate] = useState(new Date(date[0]));
+	const [hoverDate, setHoverDate] = useState<string[]>([]);
 
 	// 달력에 필요한 날짜 계산
-	const year = currentDate.getFullYear();
-	const currentMonth = currentDate.getMonth();
-	const currentMonthFirstDate = new Date(year, currentMonth, 1);
-	const day = currentMonthFirstDate.getDay();
+	const year = initDate.getFullYear();
+	const currentMonth = initDate.getMonth();
+	const isNextCalendarMonthOverDec = currentMonth + 1 > 11;
+	const nextCalendarYear = isNextCalendarMonthOverDec ? year + 1 : year;
+	const nextCalendarMonth = isNextCalendarMonthOverDec ? 0 : currentMonth + 1;
 
-	// 이전 달의 마지막 날짜
-	const getPrevLastDate = () => {
-		return new Date(year, currentMonth, 0).getDate();
-	};
+	function changeCalendarMonth(prevOrNext: 'prev' | 'next') {
+		const newDate = new Date();
+		newDate.setFullYear(year);
+		const newMonth = prevOrNext === 'next' ? currentMonth + 1 : currentMonth - 1;
+		newDate.setMonth(newMonth);
 
-	// 현재 달의 마지막 날짜
-	const getLastDate = () => {
-		return new Date(year, currentMonth + 1, 0).getDate();
-	};
+		setInitDate(newDate);
+	}
 
-	const lastDate = getLastDate();
-	const prevLastDate = getPrevLastDate();
-	const weekRows = Math.ceil((lastDate + day) / 7);
+	function changeCalendarYear(monthDiff: number) {
+		const newDate = new Date();
+		newDate.setMonth(currentMonth);
+		newDate.setFullYear(year + monthDiff);
+		setInitDate(newDate);
+	}
 
-	const changeMonth = (monthDiff: number) => {
-		setCurrentDate((prev) => {
-			const newDate = new Date(prev);
-			newDate.setMonth(prev.getMonth() + monthDiff);
-			return newDate;
-		});
-	};
-
-	const changeYear = (monthDiff: number) => {
-		setCurrentDate((prev) => {
-			const newDate = new Date(prev);
-			newDate.setFullYear(prev.getFullYear() + monthDiff);
-			return newDate;
-		});
-	};
-
-	const handleDateClick = (dateInfo: DateInfo) => {
-		const newDate = new Date(currentDate);
-
-		if (dateInfo.flag === 'prev') {
-			newDate.setMonth(currentMonth - 1);
-		} else if (dateInfo.flag === 'next') {
-			newDate.setMonth(currentMonth + 1);
-		}
-
-		newDate.setDate(dateInfo.date);
-		const formattedDate = newDate.toISOString().split('T')[0];
-		setCurrentDate(newDate);
-		onChange(formattedDate, true); // true를 전달하여 달력을 닫도록 함
-	};
+	function onHoverDate(newDateString: string) {
+		if (date.length === 1) {
+			const currentDate = new Date(date[0]);
+			const newDate = new Date(newDateString);
+			const isPrev = isBeforeDate(currentDate, newDate);
+			setHoverDate(isPrev ? [date[0], newDateString] : [newDateString, date[0]]);
+		} else setHoverDate([]);
+	}
 
 	if (!isFocused) return null;
 
@@ -88,14 +70,14 @@ export default function RangeCalendar({
 				<div className='mx-auto flex items-center gap-12pxr'>
 					<button
 						className='h-12pxr w-12pxr'
-						onClick={() => changeYear(-1)}
+						onClick={() => changeCalendarYear(-1)}
 					>
 						<ArrowLeft12 className='text-Grey_Lighten-2' />
 					</button>
 					<div className='w-40pxr text-center'>{year}</div>
 					<button
 						className='h-12pxr w-12pxr'
-						onClick={() => changeYear(1)}
+						onClick={() => changeCalendarYear(1)}
 					>
 						<ArrowRight12 className='text-Grey_Lighten-2' />
 					</button>
@@ -103,17 +85,30 @@ export default function RangeCalendar({
 			</div>
 			<div className='flex w-full justify-between gap-20pxr'>
 				<CalendarComponent
+					key={initDate.getDate()}
 					calendarYear={year}
 					calendarMonth={currentMonth}
 					date={date}
+					hoverDate={hoverDate}
 					type='prev'
+					changeCalendarMonth={changeCalendarMonth}
+					onHoverDate={onHoverDate}
+					onChange={onChange}
+					selectable={selectable}
 				/>
 				<div className='w-1pxr bg-Grey_Lighten-8'></div>
 				<CalendarComponent
-					calendarYear={year}
-					calendarMonth={currentMonth + 1}
+					key={initDate.getDate() + 1}
+					calendarYear={nextCalendarYear}
+					calendarMonth={nextCalendarMonth}
 					date={date}
+					hoverDate={hoverDate}
 					type='next'
+					changeCalendarMonth={changeCalendarMonth}
+					onHoverDate={onHoverDate}
+					onChange={onChange}
+					selectable={selectable}
+					limit={limit}
 				/>
 			</div>
 		</ul>

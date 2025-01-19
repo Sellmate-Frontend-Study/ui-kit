@@ -4,13 +4,13 @@ import SDateRangepicker from '../components/SDateRangepicker';
 
 const DatePicker = () => {
 	const [date, setDate] = useState(['2024-12-14']);
-	const [dateRange, setDateRange] = useState(['2024-12-14', '2025-01-15']);
+	const [dateRange, setDateRange] = useState(['2024-12-14', '2025-02-15']);
 
-	useEffect(() => {
-		setTimeout(() => {
-			setDate(['2024-12-20']);
-		}, 2000);
-	}, []);
+	// useEffect(() => {
+	// 	setTimeout(() => {
+	// 		setDate(['2024-12-20']);
+	// 	}, 2000);
+	// }, []);
 
 	useEffect(() => {
 		console.log(date);
@@ -40,6 +40,8 @@ const DatePicker = () => {
 					label={'label'}
 					date={dateRange}
 					onChange={(date) => setDateRange(date)}
+					selectable={['2024-12-01', '2025-12-01']}
+					limit={30}
 					clearable
 				/>
 			</div>
