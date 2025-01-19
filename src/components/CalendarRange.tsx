@@ -20,6 +20,8 @@ interface CalendarMonthProps {
 	isEndOfRange: (date: Date) => boolean;
 	isInRange: (date: Date) => boolean;
 	isToday: (date: Date) => boolean;
+	startDate: Date | null;
+	endDate: Date | null;
 }
 
 const CalendarMonth = ({
@@ -30,6 +32,8 @@ const CalendarMonth = ({
 	isEndOfRange,
 	isInRange,
 	isToday,
+	startDate,
+	endDate,
 }: CalendarMonthProps) => {
 	return (
 		<div className='mt-12pxr grid grid-cols-7 gap-y-4pxr text-center'>
@@ -49,13 +53,15 @@ const CalendarMonth = ({
 						className={`relative h-32pxr w-32pxr ${
 							isDisabled(date)
 								? 'cursor-not-allowed text-Grey_Lighten-2'
-								: isStartOfRange(date)
-									? 'rounded-l-full bg-Blue_C_Lighten-5'
-									: isEndOfRange(date)
-										? 'rounded-r-full bg-Blue_C_Lighten-5'
-										: isInRange(date)
-											? 'bg-Blue_C_Lighten-5'
-											: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:text-white'
+								: startDate && endDate
+									? isStartOfRange(date)
+										? 'rounded-l-full bg-Blue_C_Lighten-5'
+										: isEndOfRange(date)
+											? 'rounded-r-full bg-Blue_C_Lighten-5'
+											: isInRange(date)
+												? 'bg-Blue_C_Lighten-5'
+												: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:text-white'
+									: 'rounded-full hover:bg-Blue_C_Default hover:text-white'
 						} ${isInRange(date) && !(isStartOfRange(date) || isEndOfRange(date)) ? 'mx-0 rounded-none' : ''} ${
 							isToday(date) && !isDisabled(date) ? 'rounded-full border' : ''
 						}`}
@@ -196,6 +202,8 @@ const CalendarRange = ({
 						isEndOfRange={isEndOfRange}
 						isInRange={isInRange}
 						isToday={isToday}
+						startDate={startDate}
+						endDate={endDate}
 					/>
 				</div>
 				<div className='my-12pxr w-1pxr bg-Grey_Lighten-8'></div>
@@ -221,6 +229,8 @@ const CalendarRange = ({
 						isEndOfRange={isEndOfRange}
 						isInRange={isInRange}
 						isToday={isToday}
+						startDate={startDate}
+						endDate={endDate}
 					/>
 				</div>
 			</div>
