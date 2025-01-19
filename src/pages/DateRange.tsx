@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import SDatePicker from '../components/SDatePicker';
+import SDateRange from '../components/SDateRange';
 
-const DatePicker = () => {
+const DateRange = () => {
 	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 	const handleChange = (date: Date) => {
 		setSelectedDate(date);
@@ -10,13 +10,16 @@ const DatePicker = () => {
 	return (
 		<div className='flex flex-col gap-12pxr p-16pxr'>
 			<div>
-				<b>SDatePicker</b>
+				<b>SDateRange</b>
 			</div>
 			<div className='inline-flex items-center gap-8pxr'>
-				<SDatePicker onChange={handleChange} />
+				<SDateRange
+					onChange={handleChange}
+					isRange
+				/>
 			</div>
 		</div>
 	);
 };
 
-export default DatePicker;
+export default DateRange;
