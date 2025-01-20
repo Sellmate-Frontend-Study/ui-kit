@@ -1,14 +1,17 @@
-import Calendar from './Calendar';
-import { Calendar16 } from '../assets/Calendar';
-import { useDatePicker } from './datepicker/useDatePicker';
 import { useState } from 'react';
+import { Calendar16 } from '../assets/Calendar';
+import CalendarRange from './CalendarRange';
+import { useDatePicker } from './datepicker/useDatePicker';
 import DatePickerContainer from './datepicker/DatePickerContainer';
 
-interface SDatePickerProps {
+interface SDateRangeProps {
 	className?: string;
 	label?: string;
+	limitNum?: number;
+	limitStartDate?: Date;
+	limitEndDate?: Date;
 	disabled?: boolean;
-	onChange: (date: Date) => void;
+	onChange: (startDate: Date | null, endDate: Date | null) => void;
 }
 
 const utcFormat = (date: Date) => {
@@ -18,25 +21,33 @@ const utcFormat = (date: Date) => {
 	return `${year}-${month}-${day}`;
 };
 
-const SDatePicker = ({
+const SDateRange = ({
 	onChange,
 	className,
 	label,
 	disabled,
-}: SDatePickerProps) => {
+	limitNum,
+	limitStartDate,
+	limitEndDate,
+}: SDateRangeProps) => {
 	const { isOpen, setIsOpen, position, inputRef, calendarRef } = useDatePicker();
-	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+	const [startDate, setStartDate] = useState<Date | null>(null);
+	const [endDate, setEndDate] = useState<Date | null>(null);
 
-	const handleDateChange = (date: Date) => {
-		setSelectedDate(date);
-		onChange(date);
+	const handleDateChange = (
+		newStartDate: Date | null,
+		newEndDate: Date | null
+	) => {
+		setStartDate(newStartDate);
+		setEndDate(newEndDate);
+		onChange(newStartDate, newEndDate);
 	};
 
 	return (
 		<>
 			<div
 				ref={inputRef}
-				className={`s-date-picker relative flex items-center rounded-2pxr border ${
+				className={`s-date-range relative flex items-center rounded-2pxr border ${
 					disabled
 						? 'cursor-not-allowed border-Grey_Lighten-2 bg-Grey_Lighten-4 text-Grey_Default'
 						: 'cursor-pointer border-Grey_Lighten-1 bg-white'
@@ -54,13 +65,21 @@ const SDatePicker = ({
 						<span className='text-Grey_Darken-2'>{label}</span>
 					</div>
 				)}
-				<div className='flex w-134pxr flex-grow items-center px-8pxr py-4pxr'>
+				<div className='flex w-207pxr flex-grow items-center px-8pxr py-4pxr'>
 					<span className='mr-4pxr text-Grey_Darken-1'>
 						<Calendar16 />
 					</span>
-					<span className='flex-grow text-center text-Grey_Darken-4'>
-						{selectedDate ? utcFormat(selectedDate) : '날짜 선택'}
-					</span>
+					<div className='flex flex-grow items-center justify-center whitespace-nowrap text-Grey_Darken-4'>
+						{startDate ? (
+							<>
+								<span>{utcFormat(startDate)}</span>
+								<span className='mx-2 text-center'>~</span>
+								<span>{endDate ? utcFormat(endDate) : ''}</span>
+							</>
+						) : (
+							<span>날짜 선택</span>
+						)}
+					</div>
 				</div>
 			</div>
 			<DatePickerContainer
@@ -68,13 +87,17 @@ const SDatePicker = ({
 				position={position}
 				calendarRef={calendarRef}
 			>
-				<Calendar
-					selectedDate={selectedDate}
+				<CalendarRange
+					startDate={startDate}
+					endDate={endDate}
 					onDateChange={handleDateChange}
+					limitStartDate={limitStartDate}
+					limitEndDate={limitEndDate}
+					limitNum={limitNum}
 				/>
 			</DatePickerContainer>
 		</>
 	);
 };
 
-export default SDatePicker;
+export default SDateRange;

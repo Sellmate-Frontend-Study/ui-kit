@@ -14,10 +14,6 @@ const DatePicker = () => {
 			</div>
 			<div className='inline-flex items-center gap-8pxr'>
 				<SDatePicker onChange={handleChange} />
-				<SDatePicker
-					onChange={handleChange}
-					isRange
-				></SDatePicker>
 			</div>
 		</div>
 	);
