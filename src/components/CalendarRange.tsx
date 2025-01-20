@@ -16,8 +16,8 @@ interface CalendarMonthProps {
 	dates: (Date | null)[];
 	onDateClick: (date: Date) => void;
 	isDisabled: (date: Date) => boolean;
-	isStartOfRange: (date: Date) => boolean;
-	isEndOfRange: (date: Date) => boolean;
+	isStart: (date: Date) => boolean;
+	isEnd: (date: Date) => boolean;
 	isInRange: (date: Date) => boolean;
 	isToday: (date: Date) => boolean;
 	startDate: Date | null;
@@ -28,8 +28,8 @@ const CalendarMonth = ({
 	dates,
 	onDateClick,
 	isDisabled,
-	isStartOfRange,
-	isEndOfRange,
+	isStart,
+	isEnd,
 	isInRange,
 	isToday,
 	startDate,
@@ -54,15 +54,15 @@ const CalendarMonth = ({
 							isDisabled(date)
 								? 'cursor-not-allowed text-Grey_Lighten-2'
 								: startDate && endDate
-									? isStartOfRange(date)
+									? isStart(date)
 										? 'rounded-l-full bg-Blue_C_Lighten-5'
-										: isEndOfRange(date)
+										: isEnd(date)
 											? 'rounded-r-full bg-Blue_C_Lighten-5'
 											: isInRange(date)
 												? 'bg-Blue_C_Lighten-5'
 												: 'text-Grey_Darken-4 hover:rounded-full hover:bg-Blue_C_Default hover:text-white'
 									: 'rounded-full hover:bg-Blue_C_Default hover:text-white'
-						} ${isInRange(date) && !(isStartOfRange(date) || isEndOfRange(date)) ? 'mx-0 rounded-none' : ''} ${
+						} ${isInRange(date) && !(isStart(date) || isEnd(date)) ? 'mx-0 rounded-none' : ''} ${
 							isToday(date) && !isDisabled(date) ? 'rounded-full border' : ''
 						}`}
 						onClick={() => !isDisabled(date) && onDateClick(date)}
@@ -70,7 +70,7 @@ const CalendarMonth = ({
 					>
 						<span
 							className={`flex h-32pxr w-32pxr items-center justify-center ${
-								isStartOfRange(date) || isEndOfRange(date)
+								isStart(date) || isEnd(date)
 									? 'rounded-full bg-Blue_C_Default font-bold text-white'
 									: ''
 							}`}
@@ -138,10 +138,10 @@ const CalendarRange = ({
 		return date >= startDate && date <= endDate;
 	};
 
-	const isStartOfRange = (date: Date): boolean =>
+	const isStart = (date: Date): boolean =>
 		!!(startDate && date.getTime() === startDate.getTime());
 
-	const isEndOfRange = (date: Date): boolean =>
+	const isEnd = (date: Date): boolean =>
 		!!(endDate && date.getTime() === endDate.getTime());
 
 	const isDisabled = (date: Date): boolean => {
@@ -198,8 +198,8 @@ const CalendarRange = ({
 						dates={dates}
 						onDateClick={handleDateClick}
 						isDisabled={isDisabled}
-						isStartOfRange={isStartOfRange}
-						isEndOfRange={isEndOfRange}
+						isStart={isStart}
+						isEnd={isEnd}
 						isInRange={isInRange}
 						isToday={isToday}
 						startDate={startDate}
@@ -225,8 +225,8 @@ const CalendarRange = ({
 						dates={nextDates}
 						onDateClick={handleDateClick}
 						isDisabled={isDisabled}
-						isStartOfRange={isStartOfRange}
-						isEndOfRange={isEndOfRange}
+						isStart={isStart}
+						isEnd={isEnd}
 						isInRange={isInRange}
 						isToday={isToday}
 						startDate={startDate}
