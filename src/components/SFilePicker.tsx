@@ -1,8 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { ClockIcon } from '../assets/ClockIcon';
-import TimePickerPortal from './timePicker/TimePickerPortal';
-import TimeController from './timePicker/TimeController';
-import SInput from './SInput';
+import { useEffect, useRef, useState } from 'react';
 import { FileIcon } from '../assets/FileIcon';
 
 interface SFilePickerProps {
@@ -20,6 +16,11 @@ const SFilePicker = ({
 }: SFilePickerProps) => {
 	const [selectedFile, setSelectedFile] = useState<File | null>(file);
 	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	useEffect(() => {
+		if (selectedFile) onChange?.(selectedFile);
+	}, [selectedFile, onChange]);
+
 	return (
 		<>
 			<input
