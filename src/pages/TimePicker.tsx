@@ -7,7 +7,6 @@ const TimePicker = () => {
 	return (
 		<div className='space-y-32pxr p-24pxr'>
 			<strong>Time Picker</strong>
-			<p>{time}</p>
 			<div>
 				<STimePicker
 					value={time}
