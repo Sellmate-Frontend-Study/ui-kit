@@ -16,6 +16,7 @@ const TimePicker = () => {
 				/>
 				<STimePicker
 					value={time}
+					rangeValue='01:00'
 					is24HourFormat={false}
 				/>
 			</div>
