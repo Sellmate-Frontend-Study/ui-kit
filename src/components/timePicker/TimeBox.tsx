@@ -19,7 +19,9 @@ const TimeBox = ({
 	onMeridiemChange,
 }: TimeBoxProps) => {
 	const [hours, minutes] = time.split(':').map(Number);
-	const displayHours = !is24Hour ? hours % TIME_FORMAT.HOURS_12 : hours;
+	const displayHours = !is24Hour
+		? hours % TIME_FORMAT.HOURS_12 || TIME_FORMAT.HOURS_12
+		: hours;
 
 	const ArrowUp = icons.ArrowUp[12];
 	const ArrowDown = icons.ArrowDown[12];
