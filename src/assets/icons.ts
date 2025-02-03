@@ -1,5 +1,7 @@
 import { SVGProps } from 'react';
 import { ArrowDown24 } from './ArrowDownIcon';
+import { ArrowDown12 } from './ArrowDownIcon';
+import { ArrowUp12 } from './ArrowUpIcon';
 import { ArrowLeftEnd12 } from './ArrowLeftEndIcon';
 import { ArrowLeft12 } from './ArrowLeftIcon';
 import { ArrowRightEnd12 } from './ArrowRightEndIcon';
@@ -14,12 +16,17 @@ import { NotificationOutline24 } from './NotificationOulineIcon';
 import { Setting24 } from './SettingIcon';
 import { VisibilityOff16 } from './VisibilityOffIcon';
 import { VisibilityOn16 } from './VisibilityOnIcon';
+import { Clock16 } from './ClockIcon';
 
 export const icons: Record<
 	string,
 	Record<number, React.ComponentType<SVGProps<SVGSVGElement>>>
 > = {
+	ArrowUp: {
+		12: ArrowUp12,	
+	},
 	ArrowDown: {
+		12: ArrowDown12,
 		24: ArrowDown24,
 	},
 	ArrowLeftEnd: {
@@ -39,6 +46,9 @@ export const icons: Record<
 	},
 	Close: {
 		12: Close12,
+	},
+	Clock: {
+		16: Clock16,
 	},
 	HelpOutline: {
 		16: HelpOutline16,
